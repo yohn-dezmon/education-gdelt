@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.functions;
 
@@ -44,6 +45,27 @@ public class DataFrameInput {
 						createDataFrame(spark, filePath, inputFile, arrayOfDfs);
 					}
 				}
+		
+		for (Dataset<Row> dataframe : arrayOfDfs) {
+			// this creates a table nasdaq that I can run sql queries on
+			dataframe.createOrReplaceTempView("gdeltedu");
+			
+			// generating dataset for query by states...
+			Dataset<Row> filterByState = dataframe.sqlContext().sql("Select GLOBALEVENTID, FractionDate, Actor1Code,"
+					+ " Actor1Name, AvgTone, EventCode,"
+					+ " ActionGeo_ADM1Code, ActionGeo_FullName, NumMentions, SOURCEURL from gdeltedu"
+					+ " where ActionGeo_ADM1Code = 'USTX'");
+			
+			filterByState.show();
+			
+			
+
+			
+			// local output: /home/vmuser/stockdata/joineddata/nasdaq
+			// this saves individual parquet files into a folder, that can later be accessed as one dataframe
+//			filtered.write().mode(SaveMode.Append).parquet(output);
+
+		}
 	
 		
 		

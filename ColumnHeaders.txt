@@ -1,0 +1,36 @@
+GLOBALEVENTID,SQLDATE,MonthYear,Year,FractionDate,Actor1Code,
+Actor1Name,Actor1CountryCode,Actor1KnownGroupCode,Actor1Religion1Code,
+Actor1Type1Code,Actor2Type2Code,Actor1Type3Code,Actor2Code,Actor2Name,
+IsRootEvent,EventCode,EventBaseCode,EventRootCode,QuadClass,NumMentions,
+AvgTone,Actor1Geo_Type,Actor1Geo_FullName,ActionGeo_Type,ActionGeo_FullName,
+ActionGeo_CountryCode,ActionGeo_ADM1Code,ActionGeo_Lat,ActionGeo_Long,DATEADDED,
+SOURCEURL
+
+Example line:
+686517686,20170904,201709,2017,2017.6685,EDU,SCHOOL,,,,
+EDU,,,USA,GOLDEN STATE,1,020,020,02,1,10,-1.60984848484849,2,
+"District of Columbia, United States",2,"District of Columbia, United States",
+US,USDC,38.8964,-77.0262,20170904093000,
+http://www.nationalreview.com/article/451047/transgender-agenda-schools-kindergarten-california-opt-in-opt-out-state-laws-prevent
+
+Example line2:
+686582322,20170904,201709,2017,2017.6685,JPN,HIROSHIMA,JPN,,,,,,
+EDU,STUDENT,0,043,043,04,1,1,3.96432111000992,3,
+"All Souls Church, District of Columbia, United States",
+3,"All Souls Church, District of Columbia, United States",US,USDC,38.9259,-77.0358,20170904150000,http://fillmorecountyjournal.com/in-peace-with-honor-to-be-presented-in-lanesboro/
+
+
+
+Any obvious transformations that need to take place?
+1. I would (maybe) like a column that just has the words following the last "/" in the SOURCEURL as a separate column.
+2. certian columns [ActionGeo_FullName, Actor1Geo_FullName,] have quotations that need to be removed.
+^^ OH WAIT! NVM I forgot that the Dataframe<Row> /csv reader of spark automatically does that now! yay :D
+
+
+
+
+Subsets (querying by state):
+GLOBALEVENTID, FractionDate, Actor1Code, Actor1Name, AvgTone, EventCode, 
+ActionGeo_ADM1Code, NumMentions, SOURCEURL
+
+
