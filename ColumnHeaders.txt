@@ -6,6 +6,26 @@ AvgTone,Actor1Geo_Type,Actor1Geo_FullName,ActionGeo_Type,ActionGeo_FullName,
 ActionGeo_CountryCode,ActionGeo_ADM1Code,ActionGeo_Lat,ActionGeo_Long,DATEADDED,
 SOURCEURL
 
+Columns that will be used frequently:
+GLOBALEVNTID, SQLDATE, Year, Actor1Name, IsRootEvent, EventCode, NumMentions,
+AvgTone, ActionGeo_FullName, ActionGeo_ADM1Code, DATEADDED, SOURCEURL
+
+Columns that will be used less frequently:
+[delete MonthYear], 
+
+Columns that neeed to be transformed:
+SQLDATE (to dateTime)
+Year (int) 
+QuadClass (int)
+NumMentions (int)
+AvgTone (numeric... ok what is that?)
+
+
+
+
+Either Actor1Code or Actor2Code will always be EDU or %EDU%
+
+
 Example line:
 686517686,20170904,201709,2017,2017.6685,EDU,SCHOOL,,,,
 EDU,,,USA,GOLDEN STATE,1,020,020,02,1,10,-1.60984848484849,2,
@@ -25,9 +45,11 @@ Any obvious transformations that need to take place?
 1. I would (maybe) like a column that just has the words following the last "/" in the SOURCEURL as a separate column.
 2. certian columns [ActionGeo_FullName, Actor1Geo_FullName,] have quotations that need to be removed.
 ^^ OH WAIT! NVM I forgot that the Dataframe<Row> /csv reader of spark automatically does that now! yay :D
+3. I would like to transform ActionGeo_FullName with a UDF to (a) check to see if there are three comma delimited values
+(b) if there are only save the first comma delimited value 
+^^ This will be if I want to do an analysis by a particular city 
 
-
-
+TO_DATE(CAST(UNIX_TIMESTAMP(SQLDATE, 'yyyyMMdd') as DATE))
 
 Subsets (querying by state):
 GLOBALEVENTID, FractionDate, Actor1Code, Actor1Name, AvgTone, EventCode, 
