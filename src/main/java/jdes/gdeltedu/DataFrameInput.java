@@ -1,7 +1,10 @@
 package jdes.gdeltedu;
 
 import java.io.File;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +20,7 @@ import org.apache.spark.sql.functions;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import scala.Tuple2;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -43,8 +46,8 @@ public class DataFrameInput {
 		
 		Pattern csvp = Pattern.compile(".*\\.csv");
 		
-		// test dir = /home/vmuser/testSparkFinal/
-		// actual dir = /home/vmuser/stockdata/
+		// test dir = /home/vmuser/Desktop/OldVM/TestDataset/
+		// actual dir = /home/vmuser/Desktop/OldVM/PersonalProjectData/
 		File[] folder = new File(inputDir).listFiles();
 		for (File file : folder) {
 				String filePath = file.getAbsolutePath();
@@ -67,6 +70,20 @@ public class DataFrameInput {
         
     }, DataTypes.DateType);
 		
+		// Create the timestamp creator UDF
+        spark.udf().register("totimestamp", (Long date) -> {
+        		String dateStr = date.toString();
+                // Example input: 20150422173000
+            	// yyyyMMddHHmmss
+                LocalDateTime fulltime = LocalDateTime.parse(dateStr,
+                DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+
+                Timestamp timestamp = Timestamp.valueOf(fulltime);
+
+                return timestamp;
+            
+        }, DataTypes.TimestampType);
+		
 		
 		
 		
@@ -74,44 +91,47 @@ public class DataFrameInput {
 			// this creates a table nasdaq that I can run sql queries on
 			dataframe.createOrReplaceTempView("firsttable");
 			
-			Dataset<Row> dfdf = dataframe.sqlContext().sql("SELECT GLOBALEVENTID,CAST(SQLDATE AS STRING) AS strdate,Year,FractionDate,Actor1Code, " + 
-					"Actor1Name,Actor1CountryCode,Actor1KnownGroupCode,Actor1Religion1Code, " + 
-					"Actor1Type1Code,Actor2Type2Code,Actor1Type3Code,Actor2Code,Actor2Name, " + 
-					"IsRootEvent,EventCode,EventBaseCode,EventRootCode,QuadClass,NumMentions, " + 
-					"AvgTone,Actor1Geo_Type,Actor1Geo_FullName,ActionGeo_Type,ActionGeo_FullName, " + 
-					"ActionGeo_CountryCode,ActionGeo_ADM1Code,ActionGeo_Lat,ActionGeo_Long,DATEADDED, " + 
+			Dataset<Row> dfdf = dataframe.sqlContext().sql("SELECT GLOBALEVENTID, CAST(SQLDATE AS STRING) AS strdate, Year, FractionDate, Actor1Code, " + 
+					"Actor1Name, Actor1CountryCode, Actor1KnownGroupCode, Actor1Religion1Code, " + 
+					"Actor1Type1Code, Actor2Type2Code, Actor1Type3Code, Actor2Code, Actor2Name, " + 
+					"IsRootEvent, EventCode, EventBaseCode, EventRootCode, QuadClass, NumMentions, " + 
+					"AvgTone, Actor1Geo_Type, Actor1Geo_FullName, ActionGeo_Type, ActionGeo_FullName, " + 
+					"ActionGeo_CountryCode, ActionGeo_ADM1Code, ActionGeo_Lat, ActionGeo_Long, DATEADDED, " + 
 					"SOURCEURL from firsttable");
 			
 			dfdf.createOrReplaceTempView("secondtable");
 			
 			// generating dataset for query by states...
-			Dataset<Row> dfToAppend = dataframe.sqlContext().sql("Select GLOBALEVENTID, todate(strdate) as Date,Year,FractionDate,Actor1Code, " + 
-					"Actor1Name,Actor1CountryCode,Actor1KnownGroupCode,Actor1Religion1Code, " + 
-					"Actor1Type1Code,Actor2Type2Code,Actor1Type3Code,Actor2Code,Actor2Name, " + 
-					"IsRootEvent,EventCode,EventBaseCode,EventRootCode,QuadClass,NumMentions, " + 
-					"AvgTone,Actor1Geo_Type,Actor1Geo_FullName,ActionGeo_Type,ActionGeo_FullName, " + 
-					"ActionGeo_CountryCode,ActionGeo_ADM1Code,ActionGeo_Lat,ActionGeo_Long,DATEADDED, " + 
-					"SOURCEURL from secondtable");
+			Dataset<Row> dfToAppend = dataframe.sqlContext().sql("Select GLOBALEVENTID, todate(strdate) as Date, Year, FractionDate, Actor1Code, " + 
+					"Actor1Name, Actor1CountryCode, Actor1KnownGroupCode, Actor1Religion1Code, " + 
+					"Actor1Type1Code, Actor2Type2Code, Actor1Type3Code, Actor2Code, Actor2Name, " + 
+					"IsRootEvent, EventCode, EventBaseCode, EventRootCode, QuadClass, NumMentions, " + 
+					"AvgTone,Actor1Geo_Type, Actor1Geo_FullName, ActionGeo_Type, ActionGeo_FullName, " + 
+					"ActionGeo_CountryCode, ActionGeo_ADM1Code, ActionGeo_Lat, ActionGeo_Long, totimestamp(DATEADDED) as DateAdded, " + 
+					"SOURCEURL from secondtable order by Date");
 			
+			dfToAppend.createOrReplaceTempView("thirdtable");
 			
 			// this may be useful late for example for NumMentions! [gives basic statistics per column]
 //			dfToAppend.describe("SQLDATE","MonthYear","Year","FractionDate").show();
 //			Dataset<Row> dfStrDate = dfToAppend.withColumn("SQLDATE", dfToAppend.col("SQLDATE").cast(DataTypes.StringType));
 			
 //			dfdf.show();
-			dfToAppend.show();
+//			dfToAppend.show();
 			
 //			dataTypePrint(dfDateType);
-			dataTypePrint(dfToAppend);
+//			dataTypePrint(dfToAppend);
 //			dataTypePrint(dfdf);
 			
 //			dfDateType.show();
-
-			
-			// local output: /home/vmuser/stockdata/joineddata/nasdaq
+				
+			//  output in HDFS: /user/vmuser/gdelt
+			// local output: /home/vmuser/Desktop
+			// I forget if the folder should exist already or not... If I had to 
+			// guess I would say that it SHOULDN't exist before running the job
 			// this saves individual parquet files into a folder, that can later be accessed as one dataframe
-//			dfToAppend.write().mode(SaveMode.Append).parquet(output);
-
+			dfToAppend.coalesce(3).write().mode(SaveMode.Append).parquet(output);
+			
 		}
 	
 		
