@@ -57,7 +57,6 @@ public class DataFrameInput {
 						createDataFrame(spark, filePath, inputFile, arrayOfDfs);
 					}
 				}
-		
 		spark.udf().register("todate", (dateInt) -> { 
             // Example input: 20190710
 			String dateStr = String.valueOf(dateInt);
@@ -84,9 +83,6 @@ public class DataFrameInput {
             
         }, DataTypes.TimestampType);
 		
-		
-		
-		
 		for (Dataset<Row> dataframe : arrayOfDfs) {
 			// this creates a table nasdaq that I can run sql queries on
 			dataframe.createOrReplaceTempView("firsttable");
@@ -101,16 +97,16 @@ public class DataFrameInput {
 			
 			dfdf.createOrReplaceTempView("secondtable");
 			
-			// generating dataset for query by states...
-			Dataset<Row> dfToAppend = dataframe.sqlContext().sql("Select GLOBALEVENTID, todate(strdate) as Date, Year, FractionDate, Actor1Code, " + 
+			Dataset<Row> dfToAppend = dataframe.sqlContext().sql("SELECT GLOBALEVENTID, todate(strdate) as Date, Year, FractionDate, Actor1Code, " + 
 					"Actor1Name, Actor1CountryCode, Actor1KnownGroupCode, Actor1Religion1Code, " + 
 					"Actor1Type1Code, Actor2Type2Code, Actor1Type3Code, Actor2Code, Actor2Name, " + 
 					"IsRootEvent, EventCode, EventBaseCode, EventRootCode, QuadClass, NumMentions, " + 
-					"AvgTone,Actor1Geo_Type, Actor1Geo_FullName, ActionGeo_Type, ActionGeo_FullName, " + 
+					"AvgTone, Actor1Geo_Type, Actor1Geo_FullName, ActionGeo_Type, ActionGeo_FullName, " + 
 					"ActionGeo_CountryCode, ActionGeo_ADM1Code, ActionGeo_Lat, ActionGeo_Long, totimestamp(DATEADDED) as DateAdded, " + 
-					"SOURCEURL from secondtable order by Date");
+					"SOURCEURL from secondtable ORDER BY DateAdded");
 			
-			dfToAppend.createOrReplaceTempView("thirdtable");
+//			dfToAppend.show();
+			
 			
 			// this may be useful late for example for NumMentions! [gives basic statistics per column]
 //			dfToAppend.describe("SQLDATE","MonthYear","Year","FractionDate").show();
@@ -130,7 +126,10 @@ public class DataFrameInput {
 			// I forget if the folder should exist already or not... If I had to 
 			// guess I would say that it SHOULDN't exist before running the job
 			// this saves individual parquet files into a folder, that can later be accessed as one dataframe
-			dfToAppend.coalesce(3).write().mode(SaveMode.Append).parquet(output);
+			// coalesce(3).
+			dfToAppend.write().format("com.databricks.spark.avro").mode(SaveMode.Append).save(output);
+			// dataframe.write.format("com.databricks.spark.avro").save(outputPath)
+			// df2.write().format("com.databricks.spark.avro").mode(SaveMode.Overwrite).save(f.getOutputPath());
 			
 		}
 	

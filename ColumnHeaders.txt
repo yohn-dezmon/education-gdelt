@@ -6,12 +6,22 @@ AvgTone,Actor1Geo_Type,Actor1Geo_FullName,ActionGeo_Type,ActionGeo_FullName,
 ActionGeo_CountryCode,ActionGeo_ADM1Code,ActionGeo_Lat,ActionGeo_Long,DATEADDED,
 SOURCEURL
 
+Primary Key:
+GlobalEventID
+
 Columns that will be used frequently:
-GLOBALEVNTID, SQLDATE, Year, Actor1Name, IsRootEvent, EventCode, NumMentions,
-AvgTone, ActionGeo_FullName, ActionGeo_ADM1Code, DATEADDED, SOURCEURL
+GLOBALEVNTID, SQLDATE, Year, Actor1Name, IsRootEvent, EventCode, NumMentions, Actor1Code, Actor1Name,
+Actor2Code, Actor2Name AvgTone, ActionGeo_FullName, ActionGeo_ADM1Code, DATEADDED, SOURCEURL, QuadClass,
+ActionGeo_CountryCode, 
+
+
+Getting rid of:
+MonthYear
 
 Columns that will be used less frequently:
-[delete MonthYear], 
+FractionDate, Actor1CountryCode, Actor1KnownGroupCode, Actor1Religion1Code, Actor1Type1Code, Actor2Type2Code,
+Actor1Type3Code, EventBaseCode, EventRootCode, ActionGeo_Lat, ActionGeo_Long, ActionGeo_Type,  
+Actor1Geo_Type, Actor1Geo_FullName, 
 
 Columns that neeed to be transformed:
 SQLDATE (to dateTime)

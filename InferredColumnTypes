@@ -102,3 +102,284 @@ this though... b/c doing df.show() retrieves an error.
 (ActionGeo_Long,DoubleType)
 (DateAdded,TimestampType)
 (SOURCEURL,StringType)
+
+--
+
+Revised b/c parquet can't deserialize date formats...
+
+{
+  "type" : "struct",
+  "fields" : [ {
+    "name" : "GLOBALEVENTID",
+    "type" : "integer",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "SQLDATE",
+    "type" : "integer",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "Year",
+    "type" : "integer",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "FractionDate",
+    "type" : "double",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "Actor1Code",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "Actor1Name",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "Actor1CountryCode",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "Actor1KnownGroupCode",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "Actor1Religion1Code",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "Actor1Type1Code",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "Actor2Type2Code",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "Actor1Type3Code",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "Actor2Code",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "Actor2Name",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "IsRootEvent",
+    "type" : "integer",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "EventCode",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "EventBaseCode",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "EventRootCode",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "QuadClass",
+    "type" : "integer",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "NumMentions",
+    "type" : "integer",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "AvgTone",
+    "type" : "double",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "Actor1Geo_Type",
+    "type" : "integer",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "Actor1Geo_FullName",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "ActionGeo_Type",
+    "type" : "integer",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "ActionGeo_FullName",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "ActionGeo_CountryCode",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "ActionGeo_ADM1Code",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "ActionGeo_Lat",
+    "type" : "double",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "ActionGeo_Long",
+    "type" : "double",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "DATEADDED",
+    "type" : "long",
+    "nullable" : true,
+    "metadata" : { }
+  }, {
+    "name" : "SOURCEURL",
+    "type" : "string",
+    "nullable" : true,
+    "metadata" : { }
+  } ]
+}
+
+and corresponding Parquet message type:
+message spark_schema {
+  optional int32 GLOBALEVENTID;
+  optional int32 SQLDATE;
+  optional int32 Year;
+  optional double FractionDate;
+  optional binary Actor1Code (UTF8);
+  optional binary Actor1Name (UTF8);
+  optional binary Actor1CountryCode (UTF8);
+  optional binary Actor1KnownGroupCode (UTF8);
+  optional binary Actor1Religion1Code (UTF8);
+  optional binary Actor1Type1Code (UTF8);
+  optional binary Actor2Type2Code (UTF8);
+  optional binary Actor1Type3Code (UTF8);
+  optional binary Actor2Code (UTF8);
+  optional binary Actor2Name (UTF8);
+  optional int32 IsRootEvent;
+  optional binary EventCode (UTF8);
+  optional binary EventBaseCode (UTF8);
+  optional binary EventRootCode (UTF8);
+  optional int32 QuadClass;
+  optional int32 NumMentions;
+  optional double AvgTone;
+  optional int32 Actor1Geo_Type;
+  optional binary Actor1Geo_FullName (UTF8);
+  optional int32 ActionGeo_Type;
+  optional binary ActionGeo_FullName (UTF8);
+  optional binary ActionGeo_CountryCode (UTF8);
+  optional binary ActionGeo_ADM1Code (UTF8);
+  optional double ActionGeo_Lat;
+  optional double ActionGeo_Long;
+  optional int64 DATEADDED;
+  optional binary SOURCEURL (UTF8);
+}
+
+---
+from error message when merging schema 
+
+ |-- GLOBALEVENTID: integer (nullable = true)
+ |-- SQLDATE: integer (nullable = true)
+ |-- Year: integer (nullable = true)
+ |-- FractionDate: double (nullable = true)
+ |-- Actor1Code: string (nullable = true)
+ |-- Actor1Name: string (nullable = true)
+ |-- Actor1CountryCode: string (nullable = true)
+ |-- Actor1KnownGroupCode: string (nullable = true)
+ |-- Actor1Religion1Code: string (nullable = true)
+ |-- Actor1Type1Code: string (nullable = true)
+ |-- Actor2Type2Code: string (nullable = true)
+ |-- Actor1Type3Code: string (nullable = true)
+ |-- Actor2Code: string (nullable = true)
+ |-- Actor2Name: string (nullable = true)
+ |-- IsRootEvent: integer (nullable = true)
+ |-- EventCode: integer (nullable = true)
+ |-- EventBaseCode: integer (nullable = true)
+ |-- EventRootCode: integer (nullable = true)
+ |-- QuadClass: integer (nullable = true)
+ |-- NumMentions: integer (nullable = true)
+ |-- AvgTone: double (nullable = true)
+ |-- Actor1Geo_Type: integer (nullable = true)
+ |-- Actor1Geo_FullName: string (nullable = true)
+ |-- ActionGeo_Type: integer (nullable = true)
+ |-- ActionGeo_FullName: string (nullable = true)
+ |-- ActionGeo_CountryCode: string (nullable = true)
+ |-- ActionGeo_ADM1Code: string (nullable = true)
+ |-- ActionGeo_Lat: double (nullable = true)
+ |-- ActionGeo_Long: double (nullable = true)
+ |-- DATEADDED: long (nullable = true)
+ |-- SOURCEURL: string (nullable = true)
+
+ 
+ ---
+ 
+ AVRO (reading in with spark-avro)
+ 
+ (RowKey,StringType)
+(GLOBALEVENTID,IntegerType)
+(Year,IntegerType)
+(FractionDate,DoubleType)
+(Actor1Code,StringType)
+(Date,LongType)
+(DateAdded,LongType)
+(Actor1Name,StringType)
+(Actor1CountryCode,StringType)
+(Actor1KnownGroupCode,StringType)
+(Actor1Religion1Code,StringType)
+(Actor1Type1Code,StringType)
+(Actor2Type2Code,StringType)
+(Actor1Type3Code,StringType)
+(Actor2Code,StringType)
+(Actor2Name,StringType)
+(IsRootEvent,IntegerType)
+(EventCode,StringType)
+(EventBaseCode,StringType)
+(EventRootCode,StringType)
+(QuadClass,IntegerType)
+(NumMentions,IntegerType)
+(AvgTone,DoubleType)
+(Actor1Geo_Type,IntegerType)
+(Actor1Geo_FullName,StringType)
+(ActionGeo_Type,IntegerType)
+(ActionGeo_FullName,StringType)
+(ActionGeo_CountryCode,StringType)
+(ActionGeo_ADM1Code,StringType)
+(ActionGeo_Lat,DoubleType)
+(ActionGeo_Long,DoubleType)
+(SOURCEURL,StringType)
+
+---
+
+avro read 
+
+Date         | DateAdded
+1424246400000|1424325600000
+
+Timiing is the same between coalesce and not coalesce... so I guess we don't need to do it.
