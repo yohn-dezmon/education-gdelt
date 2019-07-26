@@ -100,7 +100,8 @@ public class DataFrameInput {
 			Dataset<Row> dfToAppend = dataframe.sqlContext().sql("SELECT GLOBALEVENTID, todate(strdate) as Date, Year, FractionDate, Actor1Code, " + 
 					"Actor1Name, Actor1CountryCode, Actor1KnownGroupCode, Actor1Religion1Code, " + 
 					"Actor1Type1Code, Actor2Type2Code, Actor1Type3Code, Actor2Code, Actor2Name, " + 
-					"IsRootEvent, EventCode, EventBaseCode, EventRootCode, QuadClass, NumMentions, " + 
+					"IsRootEvent, CAST(EventCode AS STRING) as EventCode, CAST(EventBaseCode AS STRING) EventBaseCode, "
+					+ "CAST(EventRootCode AS STRING) as EventRootCode, QuadClass, NumMentions, " + 
 					"AvgTone, Actor1Geo_Type, Actor1Geo_FullName, ActionGeo_Type, ActionGeo_FullName, " + 
 					"ActionGeo_CountryCode, ActionGeo_ADM1Code, ActionGeo_Lat, ActionGeo_Long, totimestamp(DATEADDED) as DateAdded, " + 
 					"SOURCEURL from secondtable ORDER BY DateAdded");

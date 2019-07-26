@@ -1,0 +1,52 @@
+{"namespace": "gdeltedu.model",
+"type": "record",
+ "name": "Schema",
+ "fields": [
+     {"name": "GLOBALEVENTID", "type": "int", "default" : "", "doc" : "UniqueID of Event"},
+     {"name": "Year", "type": "int", "default" : "", "doc" : "The year of the event"},
+     {"name": "FractionDate", "type": "double", "default" : "", "doc" : "The year the movie was released"},
+     {"name": "count", "type": "int", "default": 0, "doc": "This is the count for the Combiner"}, 
+     {
+      "name": "genre", "doc" : "Genre of the movie",
+      "type" : {
+        "type" : "enum",
+      "name" : "MovieGenre",
+      "symbols" : ["Comedy", "Romance", "Adventure", "Action", "Animation",
+      "Children", "Crime", "Documentary", "Drama", "Fantasy", "FilmNoir", "Horror", "Musical",
+      "Mystery", "SciFi", "Thriller", "War", "Western", "nogenreslisted", "IMAX"]
+     },
+    "default" : "nogenreslisted"
+   }
+ ]
+}
+
+
+(FractionDate,DoubleType)
+(Actor1Code,StringType)
+(Date,LongType)
+(DateAdded,LongType)
+(Actor1Name,StringType)
+(Actor1CountryCode,StringType)
+(Actor1KnownGroupCode,StringType)
+(Actor1Religion1Code,StringType)
+(Actor1Type1Code,StringType)
+(Actor2Type2Code,StringType)
+(Actor1Type3Code,StringType)
+(Actor2Code,StringType)
+(Actor2Name,StringType)
+(IsRootEvent,IntegerType)
+(EventCode,StringType)
+(EventBaseCode,StringType)
+(EventRootCode,StringType)
+(QuadClass,IntegerType)
+(NumMentions,IntegerType)
+(AvgTone,DoubleType)
+(Actor1Geo_Type,IntegerType)
+(Actor1Geo_FullName,StringType)
+(ActionGeo_Type,IntegerType)
+(ActionGeo_FullName,StringType)
+(ActionGeo_CountryCode,StringType)
+(ActionGeo_ADM1Code,StringType)
+(ActionGeo_Lat,DoubleType)
+(ActionGeo_Long,DoubleType)
+(SOURCEURL,StringType)
