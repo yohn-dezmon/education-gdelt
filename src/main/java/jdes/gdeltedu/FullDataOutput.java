@@ -9,6 +9,10 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 
 import scala.Tuple2;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 
@@ -28,14 +32,29 @@ public class FullDataOutput {
 		SparkSession spark = SparkSession.builder().master("local").appName("gdelt-education-output").
 				config("some config", "value").getOrCreate();
 		// option("inferSchema", "false")
-		Dataset<Row> inputdf = spark.read().format("com.databricks.spark.avro").load(inputDir);
+		// format("com.databricks.spark.avro").
+		// I may need to add something such that this knows it's reading parquet
+		Dataset<Row> inputdf = spark.read().load(inputDir);
 		inputdf.createOrReplaceTempView("gdeltedu");
 
-		//  rowkey if I decide to use HBase CONCAT(GLOBALEVENTID, Date, EventCode, NumMentions) as RowKey
+		// Create the timestamp creator UDF
+        spark.udf().register("totimestamp", (Long date) -> {
+        		String dateStr = date.toString();
+                // Example input: 20150422173000
+            	// yyyyMMddHHmmss
+                LocalDateTime fulltime = LocalDateTime.parse(dateStr,
+                DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+
+                Timestamp timestamp = Timestamp.valueOf(fulltime);
+
+                return timestamp;
+            
+        }, DataTypes.TimestampType);
 		
+		//  rowkey if I decide to use HBase CONCAT(GLOBALEVENTID, Date, EventCode, NumMentions) as RowKey
 		Dataset<Row> gdeltFreqUsed = inputdf.sqlContext().sql("Select "
-				+ " GLOBALEVENTID, Year, Actor1Code, Date, DateAdded, " + 
-				"Actor1Name, " + 
+				+ " GLOBALEVENTID, Year, Date, DateAdded, " + 
+				"Actor1Code, Actor1Name, " + 
 				" Actor2Code, Actor2Name, " + 
 				"IsRootEvent, EventCode,  QuadClass, NumMentions, " + 
 				"AvgTone, ActionGeo_FullName, " + 
@@ -68,6 +87,7 @@ public class FullDataOutput {
 //		df.show();
 //		
 //		dataTypePrint(df);
+//		dataTypePrint(gdeltFreqUsed);
 //		dataTypePrint(gdeltLessFreqUsed);	
 //		Dataset<Row> df3 = df.withColumn("RowKey", df.col(""+"SQLDATE"+"Actor1Name"+""+""));
 //		df2.coalesce(1).write().format("com.databricks.spark.avro").mode(SaveMode.Overwrite).save(output);
@@ -82,8 +102,9 @@ public class FullDataOutput {
 //		 
 //	    Configuration conf = HBaseConfiguration.create();
 //	    conf.set("hbase.zookeeper.property.clientPort", "2181");
-//	    conf.set("hbase.zookeeper.quorum", "sandbox.hortonworks.com");
-//	    conf.set("zookeeper.znode.parent", "/hbase-unsecure");
+//	    conf.set("hbase.zookeeper.quorum", "10.0.2.15");
+//	    // "/hbase-unsecure" ?? 
+//	    conf.set("zookeeper.znode.parent", "/hbase");
 //	    Connection conn = ConnectionFactory.createConnection(conf);
 //	    Admin admin = conn.getAdmin();
 //	    if (!admin.tableExists(tableName)) {

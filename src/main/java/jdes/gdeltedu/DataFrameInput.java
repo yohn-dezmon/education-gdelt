@@ -28,7 +28,7 @@ public class DataFrameInput {
 	
 	public static void main(String[] args) {
 		String inputDir;
-		String output;
+		String output; 
 		if (args.length == 2) {
 			inputDir = args[0];
 			output = args[1];
@@ -48,6 +48,7 @@ public class DataFrameInput {
 		
 		// test dir = /home/vmuser/Desktop/OldVM/TestDataset/
 		// actual dir = /home/vmuser/Desktop/OldVM/PersonalProjectData/
+		// actual dir = /media/sf_sharedwithVM/PersonalProjectData/
 		File[] folder = new File(inputDir).listFiles();
 		for (File file : folder) {
 				String filePath = file.getAbsolutePath();
@@ -69,42 +70,25 @@ public class DataFrameInput {
         
     }, DataTypes.DateType);
 		
-		// Create the timestamp creator UDF
-        spark.udf().register("totimestamp", (Long date) -> {
-        		String dateStr = date.toString();
-                // Example input: 20150422173000
-            	// yyyyMMddHHmmss
-                LocalDateTime fulltime = LocalDateTime.parse(dateStr,
-                DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-
-                Timestamp timestamp = Timestamp.valueOf(fulltime);
-
-                return timestamp;
-            
-        }, DataTypes.TimestampType);
+		
 		
 		for (Dataset<Row> dataframe : arrayOfDfs) {
 			// this creates a table nasdaq that I can run sql queries on
-			dataframe.createOrReplaceTempView("firsttable");
+			dataframe.createOrReplaceTempView("gdeltedu");
 			
-			Dataset<Row> dfdf = dataframe.sqlContext().sql("SELECT GLOBALEVENTID, CAST(SQLDATE AS STRING) AS strdate, Year, FractionDate, Actor1Code, " + 
+			Dataset<Row> dfToAppend = dataframe.sqlContext().sql("SELECT GLOBALEVENTID, SQLDATE AS Date, Year, FractionDate, Actor1Code, " + 
 					"Actor1Name, Actor1CountryCode, Actor1KnownGroupCode, Actor1Religion1Code, " + 
 					"Actor1Type1Code, Actor2Type2Code, Actor1Type3Code, Actor2Code, Actor2Name, " + 
-					"IsRootEvent, EventCode, EventBaseCode, EventRootCode, QuadClass, NumMentions, " + 
+					"IsRootEvent, CAST(EventCode AS STRING) AS EventCode, CAST(EventBaseCode AS STRING) AS EventBaseCode, "
+					+ "CAST(EventRootCode AS STRING) AS EventRootCode, QuadClass, NumMentions, " + 
 					"AvgTone, Actor1Geo_Type, Actor1Geo_FullName, ActionGeo_Type, ActionGeo_FullName, " + 
-					"ActionGeo_CountryCode, ActionGeo_ADM1Code, ActionGeo_Lat, ActionGeo_Long, DATEADDED, " + 
-					"SOURCEURL from firsttable");
+					"ActionGeo_CountryCode, ActionGeo_ADM1Code, ActionGeo_Lat, ActionGeo_Long, DATEADDED AS DateAdded, " + 
+					"SOURCEURL from gdeltedu ORDER BY DateAdded");
 			
-			dfdf.createOrReplaceTempView("secondtable");
-			
-			Dataset<Row> dfToAppend = dataframe.sqlContext().sql("SELECT GLOBALEVENTID, todate(strdate) as Date, Year, FractionDate, Actor1Code, " + 
-					"Actor1Name, Actor1CountryCode, Actor1KnownGroupCode, Actor1Religion1Code, " + 
-					"Actor1Type1Code, Actor2Type2Code, Actor1Type3Code, Actor2Code, Actor2Name, " + 
-					"IsRootEvent, CAST(EventCode AS STRING) as EventCode, CAST(EventBaseCode AS STRING) EventBaseCode, "
-					+ "CAST(EventRootCode AS STRING) as EventRootCode, QuadClass, NumMentions, " + 
-					"AvgTone, Actor1Geo_Type, Actor1Geo_FullName, ActionGeo_Type, ActionGeo_FullName, " + 
-					"ActionGeo_CountryCode, ActionGeo_ADM1Code, ActionGeo_Lat, ActionGeo_Long, totimestamp(DATEADDED) as DateAdded, " + 
-					"SOURCEURL from secondtable ORDER BY DateAdded");
+			// GLOBALEVENTID,SQLDATE,MonthYear,Year,FractionDate,Actor1Code,Actor1Name,Actor1CountryCode,Actor1KnownGroupCode,
+			// Actor1Religion1Code,Actor1Type1Code,Actor2Type2Code,Actor1Type3Code,Actor2Code,Actor2Name,IsRootEvent,
+			// EventCode,EventBaseCode,EventRootCode,QuadClass,NumMentions,AvgTone,Actor1Geo_Type,Actor1Geo_FullName,ActionGeo_Type,ActionGeo_FullName,ActionGeo_CountryCode,ActionGeo_ADM1Code,ActionGeo_Lat,ActionGeo_Long,DATEADDED,SOURCEURL
+
 			
 //			dfToAppend.show();
 			
@@ -128,7 +112,7 @@ public class DataFrameInput {
 			// guess I would say that it SHOULDN't exist before running the job
 			// this saves individual parquet files into a folder, that can later be accessed as one dataframe
 			// coalesce(3).
-			dfToAppend.write().format("com.databricks.spark.avro").mode(SaveMode.Append).save(output);
+			dfToAppend.write().mode(SaveMode.Append).parquet(output);
 			// dataframe.write.format("com.databricks.spark.avro").save(outputPath)
 			// df2.write().format("com.databricks.spark.avro").mode(SaveMode.Overwrite).save(f.getOutputPath());
 			
