@@ -63,6 +63,9 @@ public class FullDataOutput {
     }, DataTypes.StringType);
         
 spark.udf().register("substr2", (String ActionGeo_ADM1Code) -> {
+			if (ActionGeo_ADM1Code == "" || ActionGeo_ADM1Code == null) {
+				return ActionGeo_ADM1Code;
+			}
             String prefix = ActionGeo_ADM1Code.substring(0,2);
     		if (prefix == "US") {
     			ActionGeo_ADM1Code = ActionGeo_ADM1Code.substring(2);
