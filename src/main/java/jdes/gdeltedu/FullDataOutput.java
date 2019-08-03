@@ -50,16 +50,41 @@ public class FullDataOutput {
                 return timestamp;
             
         }, DataTypes.TimestampType);
+        
+
+        spark.udf().register("substr", (String EventCode) -> {
+            
+    		if (EventCode.charAt(0) == '0') {
+    			EventCode = EventCode.substring(1);
+    		}
+
+            return EventCode;
+        
+    }, DataTypes.StringType);
+        
+spark.udf().register("substr2", (String ActionGeo_ADM1Code) -> {
+            String prefix = ActionGeo_ADM1Code.substring(0,2);
+    		if (prefix == "US") {
+    			ActionGeo_ADM1Code = ActionGeo_ADM1Code.substring(2);
+    		}
+
+            return ActionGeo_ADM1Code;
+        
+    }, DataTypes.StringType);
+        
 		
 		//  rowkey if I decide to use HBase CONCAT(GLOBALEVENTID, Date, EventCode, NumMentions) as RowKey
 		Dataset<Row> gdeltFreqUsed = inputdf.sqlContext().sql("Select "
 				+ " GLOBALEVENTID, Year, Date, DateAdded, " + 
 				"Actor1Code, Actor1Name, " + 
 				" Actor2Code, Actor2Name, " + 
-				"IsRootEvent, EventCode,  QuadClass, NumMentions, " + 
+				"IsRootEvent, substr(EventCode) as EventCode,  QuadClass, NumMentions, " + 
 				"AvgTone, ActionGeo_FullName, " + 
-				"ActionGeo_CountryCode, ActionGeo_ADM1Code,  " + 
+				"ActionGeo_CountryCode, substr2(ActionGeo_ADM1Code) as State,  " + 
 				"SOURCEURL from gdeltedu ORDER BY DateAdded");
+		
+		
+		
 		
 		String table = "gdelt.freqused";
 		String lessFreqTable = "gdelt.lessfreqused";
@@ -75,14 +100,14 @@ public class FullDataOutput {
 		
 		gdeltFreqUsed.write().mode(SaveMode.Overwrite).jdbc("jdbc:mysql://localhost:3306/gdelt", table, connectionProperties);
 		
-		Dataset<Row> gdeltLessFreqUsed = inputdf.sqlContext().sql("Select GLOBALEVENTID, FractionDate, "
-				+ "Actor1CountryCode, Actor1KnownGroupCode, Actor1Religion1Code, "
-				+ "Actor1Type1Code, Actor1Type3Code,  Actor2Type2Code, "
-				+ "EventBaseCode, EventRootCode, Actor1Geo_Type, Actor1Geo_FullName, ActionGeo_Type, "
-				+ "ActionGeo_Lat, ActionGeo_Long from gdeltedu ORDER BY FractionDate");
-		
-		
-		gdeltLessFreqUsed.write().mode(SaveMode.Overwrite).jdbc("jdbc:mysql://localhost:3306/gdelt", lessFreqTable, connectionProperties);
+//		Dataset<Row> gdeltLessFreqUsed = inputdf.sqlContext().sql("Select GLOBALEVENTID, FractionDate, "
+//				+ "Actor1CountryCode, Actor1KnownGroupCode, Actor1Religion1Code, "
+//				+ "Actor1Type1Code, Actor1Type3Code,  Actor2Type2Code, "
+//				+ "EventBaseCode, EventRootCode, Actor1Geo_Type, Actor1Geo_FullName, ActionGeo_Type, "
+//				+ "ActionGeo_Lat, ActionGeo_Long from gdeltedu ORDER BY FractionDate");
+//		
+//		
+//		gdeltLessFreqUsed.write().mode(SaveMode.Overwrite).jdbc("jdbc:mysql://localhost:3306/gdelt", lessFreqTable, connectionProperties);
 		
 //		df.show();
 //		
