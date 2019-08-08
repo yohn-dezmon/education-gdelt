@@ -15,7 +15,7 @@ public class MySQLtoSpark {
 			return;
 		}
 		
-		SparkSession spark = SparkSession.builder().master("local").appName("gdelt-education-output").
+		SparkSession spark = SparkSession.builder().master("local").appName("reading-from-MySQL").
 				config("some config", "value").getOrCreate();
 		// option("inferSchema", "false")
 		// format("com.databricks.spark.avro").
