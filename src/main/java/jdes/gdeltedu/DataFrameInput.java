@@ -73,7 +73,7 @@ public class DataFrameInput {
 		
 		
 		for (Dataset<Row> dataframe : arrayOfDfs) {
-			// this creates a table nasdaq that I can run sql queries on
+			// this creates a table gdeltedu that I can run sql queries on
 			dataframe.createOrReplaceTempView("gdeltedu");
 			
 			Dataset<Row> dfToAppend = dataframe.sqlContext().sql("SELECT GLOBALEVENTID, SQLDATE AS Date, Year, FractionDate, Actor1Code, " + 
@@ -90,31 +90,11 @@ public class DataFrameInput {
 			// EventCode,EventBaseCode,EventRootCode,QuadClass,NumMentions,AvgTone,Actor1Geo_Type,Actor1Geo_FullName,ActionGeo_Type,ActionGeo_FullName,ActionGeo_CountryCode,ActionGeo_ADM1Code,ActionGeo_Lat,ActionGeo_Long,DATEADDED,SOURCEURL
 
 			
-//			dfToAppend.show();
-			
-			
-			// this may be useful late for example for NumMentions! [gives basic statistics per column]
-//			dfToAppend.describe("SQLDATE","MonthYear","Year","FractionDate").show();
-//			Dataset<Row> dfStrDate = dfToAppend.withColumn("SQLDATE", dfToAppend.col("SQLDATE").cast(DataTypes.StringType));
-			
-//			dfdf.show();
-//			dfToAppend.show();
-			
-//			dataTypePrint(dfDateType);
-//			dataTypePrint(dfToAppend);
-//			dataTypePrint(dfdf);
-			
-//			dfDateType.show();
 				
 			//  output in HDFS: /user/vmuser/gdelt
 			// local output: /home/vmuser/Desktop
-			// I forget if the folder should exist already or not... If I had to 
-			// guess I would say that it SHOULDN't exist before running the job
-			// this saves individual parquet files into a folder, that can later be accessed as one dataframe
-			// coalesce(3).
 			dfToAppend.write().mode(SaveMode.Append).parquet(output);
-			// dataframe.write.format("com.databricks.spark.avro").save(outputPath)
-			// df2.write().format("com.databricks.spark.avro").mode(SaveMode.Overwrite).save(f.getOutputPath());
+
 			
 		}
 	

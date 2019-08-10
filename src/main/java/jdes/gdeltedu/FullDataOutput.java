@@ -31,9 +31,8 @@ public class FullDataOutput {
 
 		SparkSession spark = SparkSession.builder().master("local").appName("gdelt-education-output").
 				config("some config", "value").getOrCreate();
-		// option("inferSchema", "false")
-		// format("com.databricks.spark.avro").
-		// I may need to add something such that this knows it's reading parquet
+		
+		
 		Dataset<Row> inputdf = spark.read().load(inputDir);
 		inputdf.createOrReplaceTempView("gdeltedu");
 
@@ -104,50 +103,18 @@ public class FullDataOutput {
 		
 		gdeltFreqUsed.write().mode(SaveMode.Overwrite).jdbc("jdbc:mysql://localhost:3306/gdelt", table, connectionProperties);
 		
-//		Dataset<Row> gdeltLessFreqUsed = inputdf.sqlContext().sql("Select GLOBALEVENTID, FractionDate, "
-//				+ "Actor1CountryCode, Actor1KnownGroupCode, Actor1Religion1Code, "
-//				+ "Actor1Type1Code, Actor1Type3Code,  Actor2Type2Code, "
-//				+ "EventBaseCode, EventRootCode, Actor1Geo_Type, Actor1Geo_FullName, ActionGeo_Type, "
-//				+ "ActionGeo_Lat, ActionGeo_Long from gdeltedu ORDER BY FractionDate");
-//		
-//		
-//		gdeltLessFreqUsed.write().mode(SaveMode.Overwrite).jdbc("jdbc:mysql://localhost:3306/gdelt", lessFreqTable, connectionProperties);
+		Dataset<Row> gdeltLessFreqUsed = inputdf.sqlContext().sql("Select GLOBALEVENTID, FractionDate, "
+				+ "Actor1CountryCode, Actor1KnownGroupCode, Actor1Religion1Code, "
+				+ "Actor1Type1Code, Actor1Type3Code,  Actor2Type2Code, "
+				+ "EventBaseCode, EventRootCode, Actor1Geo_Type, Actor1Geo_FullName, ActionGeo_Type, "
+				+ "ActionGeo_Lat, ActionGeo_Long from gdeltedu ORDER BY FractionDate");
 		
-//		df.show();
-//		
-//		dataTypePrint(df);
-//		dataTypePrint(gdeltFreqUsed);
-//		dataTypePrint(gdeltLessFreqUsed);	
-//		Dataset<Row> df3 = df.withColumn("RowKey", df.col(""+"SQLDATE"+"Actor1Name"+""+""));
-//		df2.coalesce(1).write().format("com.databricks.spark.avro").mode(SaveMode.Overwrite).save(output);
-//		df2.coalesce(1).write().mode(SaveMode.Overwrite).csv(output);
-		
+		gdeltLessFreqUsed.write().mode(SaveMode.Overwrite).jdbc("jdbc:mysql://localhost:3306/gdelt", lessFreqTable, connectionProperties);
 
 		
 	}
 	
-//	public static void connectToHBase() {
-//		TableName tableName = TableName.valueOf("stock-prices");
-//		 
-//	    Configuration conf = HBaseConfiguration.create();
-//	    conf.set("hbase.zookeeper.property.clientPort", "2181");
-//	    conf.set("hbase.zookeeper.quorum", "10.0.2.15");
-//	    // "/hbase-unsecure" ?? 
-//	    conf.set("zookeeper.znode.parent", "/hbase");
-//	    Connection conn = ConnectionFactory.createConnection(conf);
-//	    Admin admin = conn.getAdmin();
-//	    if (!admin.tableExists(tableName)) {
-//	        admin.createTable(new HTableDescriptor(tableName).addFamily(new HColumnDescriptor("cf")));
-//	    }
-//	 
-//	    Table table = conn.getTable(tableName);
-//	    Put p = new Put(Bytes.toBytes("AAPL10232015"));
-//	    p.addColumn(Bytes.toBytes("cf"), Bytes.toBytes("close"), Bytes.toBytes(119));
-//	    table.put(p);
-//	 
-//	    Result r = table.get(new Get(Bytes.toBytes("AAPL10232015")));
-//	    System.out.println(r);
-//	}
+
 
 	
 	public static void dataTypePrint(Dataset<Row> dataset) {

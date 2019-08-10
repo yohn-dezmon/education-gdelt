@@ -25,13 +25,17 @@ public class SmallQueries {
 
 		inputdf.createOrReplaceTempView("freqused");
 		
+		 
+		Dataset<Row> actorAvgTone = inputdf.sqlContext().sql("SELECT Date, AvgTone, NumMentions, "
+				+ "SOURCEURL, State, EventCode from freqused");
 		
-		Dataset<Row> gdeltFreqUsed = inputdf.sqlContext().sql("SELECT Actor1Name, AVG(AvgTone) as AvgAvgTone"
-				+ " from freqused GROUP BY Actor1Name ORDER BY AvgAvgTone ASC");
 		
-		gdeltFreqUsed.show(17);
+				
 		
-		gdeltFreqUsed.coalesce(1).write().option("header", "true").mode(SaveMode.Overwrite).csv(output);
+		
+		actorAvgTone.show(20);
+		
+		actorAvgTone.coalesce(1).write().option("header", "true").mode(SaveMode.Overwrite).csv(output);
 
 
 	}
