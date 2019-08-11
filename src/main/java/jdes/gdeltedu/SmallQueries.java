@@ -35,7 +35,7 @@ public class SmallQueries {
 		
 		actorAvgTone.show(20);
 		
-		actorAvgTone.coalesce(1).write().option("header", "true").mode(SaveMode.Overwrite).csv(output);
+//		actorAvgTone.coalesce(1).write().option("header", "true").mode(SaveMode.Overwrite).csv(output);
 
 
 	}

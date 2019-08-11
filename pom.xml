@@ -14,7 +14,7 @@
 
    <properties>
   	<!-- Keep Spark versions as properties to allow easy modification -->
-    <spark.version>2.2.2</spark.version>
+    <spark.version>2.4.0</spark.version>
     
     <!-- Maven properties for compilation -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
