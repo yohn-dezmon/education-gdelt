@@ -1,0 +1,35 @@
+<<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="static/styles.css">
+    <title>Latest News</title>
+  </head>
+  <body>
+      <main>
+        <h1>Latest News</h1>
+
+
+        <div class="left_side_div">
+
+
+        <h1 class="box_head_left"> {{ query_result.A }} </h1>
+      </div>
+      <div class="first_articles">
+        {% for actor in query_result %}
+        <article>
+          <div class ="added">
+            {{ actor.Actor2Name }}
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+
+
+
+
+
+      </main>
+
+  </body>
+</html>
