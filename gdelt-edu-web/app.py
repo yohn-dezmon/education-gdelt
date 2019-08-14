@@ -29,6 +29,14 @@ class Database:
 @app.route('/', methods=['GET'])
 def index_get():
     # since FreqUsed is defined as FreqUsed(db.Model) it has a .query attribute
+    hellow = "hello world"
+
+
+    return render_template('index.html')
+
+@app.route('/querydb', methods=['GET'])
+def query_db_page():
+
     def db_query():
         db = Database()
         actors = db.list_actors()
@@ -36,8 +44,8 @@ def index_get():
         return actors
 
     res = db_query()
-    print(res)
 
-    return render_template('index.html', query_result=res)
+
+    return render_template('dbquery.html', query_result=res)
 
 app.run()

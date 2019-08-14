@@ -76,7 +76,7 @@ public class FullDataOutput {
     }, DataTypes.StringType);
         
 		
-		//  rowkey if I decide to use HBase CONCAT(GLOBALEVENTID, Date, EventCode, NumMentions) as RowKey
+//		  rowkey if I decide to use HBase CONCAT(GLOBALEVENTID, Date, EventCode, NumMentions) as RowKey
 		Dataset<Row> gdeltFreqUsed = inputdf.sqlContext().sql("Select "
 				+ " GLOBALEVENTID, Year, Date, DateAdded, " + 
 				"Actor1Code, Actor1Name, " + 
@@ -87,10 +87,11 @@ public class FullDataOutput {
 				"SOURCEURL from gdeltedu ORDER BY DateAdded");
 		
 		
-		
+		// GLOBALEVENTID, Year, Date, DateAdded, Actor1Code, Actor1Name, Actor2Code, Actor2Name,IsRootEvent, substr(EventCode) as EventCode,  QuadClass, NumMentions, AvgTone, ActionGeo_FullName, ActionGeo_CountryCode, substr2(ActionGeo_ADM1Code) as State, SOURCEURL from gdeltedu ORDER BY DateAdded 
 		
 		String table = "gdelt.freqused";
 		String lessFreqTable = "gdelt.lessfreqused";
+		String testTable = "gdelt.testing";
 		Properties connectionProperties = new Properties();
 		connectionProperties.put("user", "root");
 		connectionProperties.put("password", "");
@@ -110,6 +111,11 @@ public class FullDataOutput {
 				+ "ActionGeo_Lat, ActionGeo_Long from gdeltedu ORDER BY FractionDate");
 		
 		gdeltLessFreqUsed.write().mode(SaveMode.Overwrite).jdbc("jdbc:mysql://localhost:3306/gdelt", lessFreqTable, connectionProperties);
+		
+		
+		Dataset<Row> gdelttest = inputdf.sqlContext().sql("Select GLOBALEVENTID from gdeltedu LIMIT 10");
+//		
+		gdelttest.write().mode(SaveMode.Overwrite).jdbc("jdbc:mysql://localhost:3306/gdelt", testTable, connectionProperties);
 
 		
 	}
