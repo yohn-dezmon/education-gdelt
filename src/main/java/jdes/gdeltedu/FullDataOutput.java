@@ -36,7 +36,7 @@ public class FullDataOutput {
 		Dataset<Row> inputdf = spark.read().load(inputDir);
 		inputdf.createOrReplaceTempView("gdeltedu");
 
-		// Create the timestamp creator UDF
+		// timestamp creator UDF
         spark.udf().register("totimestamp", (Long date) -> {
         		String dateStr = date.toString();
                 // Example input: 20150422173000
@@ -50,7 +50,7 @@ public class FullDataOutput {
             
         }, DataTypes.TimestampType);
         
-
+        // UDF to remove 0 from the beginning of the EventCodes to prevent duplication
         spark.udf().register("substr", (String EventCode) -> {
             
     		if (EventCode.charAt(0) == '0') {
@@ -61,17 +61,22 @@ public class FullDataOutput {
         
     }, DataTypes.StringType);
         
-        // If I export this into MySQL again, do not use this UDF... as it is slowing down performance 
+        // UDF to extract state from country-state code 
         spark.udf().register("substr2", (String ActionGeo_ADM1Code) -> {
 			if (ActionGeo_ADM1Code == "" || ActionGeo_ADM1Code == null) {
 				return ActionGeo_ADM1Code;
 			}
+			// Trim leading white space
+			ActionGeo_ADM1Code = ActionGeo_ADM1Code.trim();
+			String state = ActionGeo_ADM1Code;
+			
+			// Validate prefix
             String prefix = ActionGeo_ADM1Code.substring(0,2);
-    		if (prefix == "US") {
-    			ActionGeo_ADM1Code = ActionGeo_ADM1Code.substring(2);
+    		if (prefix.equals("US")) {
+    			state = ActionGeo_ADM1Code.substring(2);
     		}
 
-            return ActionGeo_ADM1Code;
+            return state;
         
     }, DataTypes.StringType);
         
@@ -85,6 +90,8 @@ public class FullDataOutput {
 				"AvgTone, ActionGeo_FullName, " + 
 				"ActionGeo_CountryCode, substr2(ActionGeo_ADM1Code) as State,  " + 
 				"SOURCEURL from gdeltedu ORDER BY DateAdded");
+		
+		gdeltFreqUsed.show();
 		
 		
 		// GLOBALEVENTID, Year, Date, DateAdded, Actor1Code, Actor1Name, Actor2Code, Actor2Name,IsRootEvent, substr(EventCode) as EventCode,  QuadClass, NumMentions, AvgTone, ActionGeo_FullName, ActionGeo_CountryCode, substr2(ActionGeo_ADM1Code) as State, SOURCEURL from gdeltedu ORDER BY DateAdded 
@@ -113,9 +120,9 @@ public class FullDataOutput {
 		gdeltLessFreqUsed.write().mode(SaveMode.Overwrite).jdbc("jdbc:mysql://localhost:3306/gdelt", lessFreqTable, connectionProperties);
 		
 		
-		Dataset<Row> gdelttest = inputdf.sqlContext().sql("Select GLOBALEVENTID from gdeltedu LIMIT 10");
-//		
-		gdelttest.write().mode(SaveMode.Overwrite).jdbc("jdbc:mysql://localhost:3306/gdelt", testTable, connectionProperties);
+//		Dataset<Row> gdelttest = inputdf.sqlContext().sql("Select GLOBALEVENTID from gdeltedu LIMIT 10");
+////		
+//		gdelttest.write().mode(SaveMode.Overwrite).jdbc("jdbc:mysql://localhost:3306/gdelt", testTable, connectionProperties);
 
 		
 	}

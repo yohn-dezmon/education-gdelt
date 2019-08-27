@@ -71,17 +71,17 @@ public class DataFrameInput {
         
     }, DataTypes.DateType);
 		
-		spark.udf().register("totitle", (String SOURCEURL) -> { 
-            // Example input: 20190710
-			String dateStr = String.valueOf(dateInt);
-			
-            LocalDate goodDate = LocalDate.parse(dateStr,
-            DateTimeFormatter.ofPattern("yyyyMMdd"));
-            
-            Date date = Date.valueOf(goodDate);
-            return date;
-        
-    }, DataTypes.StringType);
+//		spark.udf().register("totitle", (String SOURCEURL) -> { 
+//            // Example input: 20190710
+//			String dateStr = String.valueOf(dateInt);
+//			
+//            LocalDate goodDate = LocalDate.parse(dateStr,
+//            DateTimeFormatter.ofPattern("yyyyMMdd"));
+//            
+//            Date date = Date.valueOf(goodDate);
+//            return date;
+//        
+//    }, DataTypes.StringType);
 		
 		
 		
