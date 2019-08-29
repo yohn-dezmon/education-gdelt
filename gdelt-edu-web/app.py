@@ -48,4 +48,14 @@ def query_db_page():
 
     return render_template('dbquery.html', query_result=res)
 
+@app.route('/curriculum', methods=['GET'])
+def curri_page():
+
+    return render_template('curriculum.html')
+
+@app.route('/essa', methods=['GET'])
+def essa_page():
+    #essa = Every Student Succeeds Act
+    return render_template('essa.html')
+
 app.run()

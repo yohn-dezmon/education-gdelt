@@ -1,5 +1,5 @@
-flask_sqlalchemy
-flask
-jinja?
-sqlalchemy
-PyMySQL
+flask_sqlalchemy [chk]
+flask [chk]
+jinja? [comes with flask]
+sqlalchemy [chk]
+PyMySQL [chk]

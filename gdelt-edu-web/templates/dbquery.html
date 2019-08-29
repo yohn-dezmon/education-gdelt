@@ -1,25 +1,13 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="static/styles.css">
-    <title>Latest News</title>
-  </head>
-  <body>
-      <main>
-        <h1>Data from MySQL and Plotly</h1>
-        <div class="navbar">
-          <ul>
-            <li><a href="/"> Home </a>
-            <li><a href="dynamicviz"> Dynamic Viz </a>
-            <li><a href="ESSA"> Every Student Succeeds Act</a>
-            <li><a href="Curriculum"> Curriculum in the US</a>
-          </ul>
-          </div>
+{% extends "layout.html" %}
+{% block title %}
+dbquery - GDELT Education
+{% endblock %}
+  {% block content %}
+      
 
         <div class="left_side_div">
           <div>
-<iframe width="450" height="450" frameborder="0" scrolling="no" src="//plot.ly/~yohn_dezmon/3.embed"></iframe>
+
 
         <h1 class="box_head_left"> {{ query_result.A }} </h1>
       </div>
@@ -33,11 +21,4 @@
         {% endfor %}
       </div>
 
-
-
-
-
-      </main>
-
-  </body>
-</html>
+{% endblock %}
