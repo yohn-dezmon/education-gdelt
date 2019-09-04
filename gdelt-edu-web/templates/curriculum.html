@@ -3,6 +3,13 @@
 Curriculum - GDELT Education
 {% endblock %}
   {% block content %}
-  <img src="static/CurriculumUSMedia20182019.png" class="histogram">
+  <img src="static/curri_occur.png" class="histogram">
   <img src="static/curriStateMentionCount.png" class="boxplot">
+  <div class="Table-Header">
+  <h2> California URLs </h2>
+  </div>
+  <div class="CATable">
+  {{ table|safe }}
+  </div>
+
   {% endblock %}

@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}
+Assessment - GDELT Education
+{% endblock %}
+  {% block content %}
+  <div class="centered">
+    <h2 class="subcategory-header"> Keyword: Assessment </h2>
+  <img src={{ assessment_count }} class="subcat-img">
+  <img src={{ assessment_avgtone }} class="subcat-img">
+  <div class="pre-tables">
+    <h2> Positive Average Tone Actors </h2>
+
+    <div class="Table-Header">
+    <h2> Maine </h2>
+    </div>
+    <div class="Table-Header">
+    <h2> Student </h2>
+    </div>
+
+  <div class="ASSESSTable">
+  {{ maine_html_table|safe }}
+  </div>
+
+  <div class="ASSESSTable">
+    {{ student_html_table|safe }}
+  </div>
+  </div>
+
+
+<div class="pre-tables">
+  <h2> Neutral & Negative Average Tone Actors </h2>
+
+  <div class="Table-Header left">
+  <h2> United States </h2>
+  </div>
+  <div class="Table-Header left">
+  <h2> Florida </h2>
+  </div>
+
+  <div class="ASSESSTable">
+  {{ US_html_table|safe }}
+  </div>
+
+  <div class="ASSESSTable FLR" >
+  {{ FL_html_table|safe }}
+  </div>
+  </div>
+
+  {% endblock %}
