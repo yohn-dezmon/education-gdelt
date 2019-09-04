@@ -41,47 +41,12 @@ class Database:
 
 @app.route('/', methods=['GET'])
 def index_get():
-    # since FreqUsed is defined as FreqUsed(db.Model) it has a .query attribute
-    hellow = "hello world"
 
-    sns.set(style='whitegrid')
+    graph = Graph()
 
-    df = pd.read_csv('/media/sf_sharedwithVM/MySQL/keyword_count.csv',
-                            sep=',',
-                            names=['Keyword','Count']
-                            )
-    df_sorted = df.sort_values(by=['Count'], ascending=False).head(10)
-    df_sorted2 = df.sort_values(by=['Count'], ascending=False).tail(11)
-
-    # default = 6.4 (width?), 4.8 (height)
-    ax = sns.barplot(x='Keyword',y='Count', data=df_sorted, palette='spring')
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=20, ha="right", fontsize=10)
-    plt.xlabel('Keyword', fontsize=12)
-    # ok I think the ordering of tight_layout() -> subplots_adjust is important!
-
-    y = df_sorted['Count']
-    plt.yticks(np.arange(0, 60000, 5000))
-    plt.ylabel('Count', fontsize=12)
-    plt.tight_layout()
-    plt.subplots_adjust(top=0.9)
-    plt.title('Educational Buzzwords in US Media Top 10')
-    # figsize=(4.0,3.8)
-    plt.figure(1)
-    url = 'static/buzzwords-top10.png'
-    # f = BytesIO()
-    plt.savefig('/media/sf_sharedwithVM/gdelt-education/gdelt-edu-web/static/buzzwords-top10.png')
-
-    plt.figure(2)
-    ax = sns.barplot(x='Keyword',y='Count', data=df_sorted2, palette='spring')
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=20, ha="right", fontsize=10)
-    plt.xlabel('Keyword', fontsize=12)
-    plt.ylabel('Count', fontsize=12)
-    plt.tight_layout()
-    plt.subplots_adjust(top=0.9)
-    plt.title('Educational Buzzwords in US Media (11-21)')
-    url2 = 'static/buzzwords-11-21.png'
-    plt.savefig('/media/sf_sharedwithVM/gdelt-education/gdelt-edu-web/static/buzzwords-11-21.png')
-
+    url = graph.buzzwords_graph("top10")
+    url2 = graph.buzzwords_graph("11-21")
+    
     return render_template('index.html', url=url, url2=url2)
 
 @app.route('/querydb', methods=['GET'])

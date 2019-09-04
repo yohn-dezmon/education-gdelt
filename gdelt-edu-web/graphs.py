@@ -16,7 +16,49 @@ class Graph(object):
     def __init__(self):
         pass
 
+    def buzzwords_graph(self, name_of_file):
+        sns.set(style='whitegrid')
 
+        df = pd.read_csv('/media/sf_sharedwithVM/MySQL/keyword_count.csv',
+                                sep=',',
+                                names=['Keyword','Count']
+                                )
+        if name_of_file == "top10":
+            df_sorted = df.sort_values(by=['Count'], ascending=False).head(10)
+
+
+            # default = 6.4 (width?), 4.8 (height)
+            ax = sns.barplot(x='Keyword',y='Count', data=df_sorted, palette='spring')
+            ax.set_xticklabels(ax.get_xticklabels(), rotation=20, ha="right", fontsize=10)
+            plt.xlabel('Keyword', fontsize=12)
+            # ok I think the ordering of tight_layout() -> subplots_adjust is important!
+
+            y = df_sorted['Count']
+            plt.yticks(np.arange(0, 60000, 5000))
+            plt.ylabel('Count', fontsize=12)
+            plt.tight_layout()
+            plt.subplots_adjust(top=0.9)
+            plt.title('Educational Buzzwords in US Media Top 10')
+            plt.figure(1)
+            url = 'static/buzzwords-top10.png'
+            plt.savefig('/media/sf_sharedwithVM/gdelt-education/gdelt-edu-web/static/buzzwords-top10.png')
+
+        if name_of_file == "11-21":
+            df_sorted2 = df.sort_values(by=['Count'], ascending=False).tail(11)
+            plt.figure(2)
+            ax = sns.barplot(x='Keyword',y='Count', data=df_sorted2, palette='spring')
+            ax.set_xticklabels(ax.get_xticklabels(), rotation=20, ha="right", fontsize=10)
+            plt.xlabel('Keyword', fontsize=12)
+            plt.ylabel('Count', fontsize=12)
+            plt.tight_layout()
+            plt.subplots_adjust(top=0.9)
+            plt.title('Educational Buzzwords in US Media (11-21)')
+            url2 = 'static/buzzwords-11-21.png'
+            plt.savefig('/media/sf_sharedwithVM/gdelt-education/gdelt-edu-web/static/buzzwords-11-21.png')
+            return url2
+
+        return url
+        
     def assessment_count(self):
         sns.set(style='whitegrid')
 
