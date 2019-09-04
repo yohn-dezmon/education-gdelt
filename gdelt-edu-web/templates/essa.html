@@ -3,9 +3,26 @@
 ESSA - GDELT Education
 {% endblock %}
   {% block content %}
-  <!-- <img src="static/EveryStudentSucceedsAct.png" class="histogram"> -->
-  <iframe width="600" height="450" frameborder="0" scrolling="no" src="//plot.ly/~yohn_dezmon/3.embed"></iframe>
-  <iframe width="900" height="450" frameborder="0" scrolling="no" src="//plot.ly/~yohn_dezmon/5.embed"></iframe>
-  <iframe width="900" height="450" frameborder="0" scrolling="no" src="//plot.ly/~yohn_dezmon/7.embed"></iframe>
+  <div class="centered">
+    <h2 class="subcategory-header"> Key Phrase: Every Student Succeeds Act </h2>
+    <div class="topic-intro">
+      <p> The Every Student Succeeds Act or ESSA was passed into law in December 2015 during
+        the Obama administration. The ESSA limited the federal government's role in
+        elementary and secondary education, in comparison to its predecessor, the 2001
+        No Child Left Behind Act (NCLB). It maintained the standardized tests that were
+        introduced in the NCLB, however it shifted the determination of standards
+        to the states and their school districts. To ensure that states are achieveing
+        their academic goals, the state determined standards are submitted to the Federal
+        Department of Education for review, feedback, and eventual approval.
+        </p>
+        <p> Below we can see how the ESSA was received by the media since 2015 when it was first passed into law.</p>
+    </div>
+  <!-- box plot -->
+  <iframe class="subcat-img" width="600" height="450" frameborder="0" scrolling="no" src="//plot.ly/~yohn_dezmon/3.embed"></iframe>
+  <!-- Avg Tone -->
+  <iframe class="subcat-img" width="900" height="450" frameborder="0" scrolling="no" src="//plot.ly/~yohn_dezmon/5.embed"></iframe>
+  <!-- Num Mentions -->
+  <iframe class="subcat-img" width="900" height="450" frameborder="0" scrolling="no" src="//plot.ly/~yohn_dezmon/7.embed"></iframe>
 
+  </div>
   {% endblock %}

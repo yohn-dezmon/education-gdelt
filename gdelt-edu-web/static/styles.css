@@ -8,7 +8,7 @@ a {
 }
 
 header {
-  border:3px dotted black;
+  border:0px dotted black;
 }
 
 h1 {
@@ -81,8 +81,20 @@ h2 {
 .centered {
   margin: auto;
   width: 900px;
-  border:1px solid black;
+  border:4px solid #FAD5FD;
   overflow-x: hidden;
+}
+
+.topic-intro {
+  margin: auto;
+  width: 80%;
+  border:0px solid black;
+  text-align: center;
+}
+
+.topic-intro p {
+  padding-right: 0.5em;
+  padding-left: 0.5em;
 }
 
 .subcat-img {
@@ -116,6 +128,11 @@ h2 {
 .links {
   float:left;
   display:block;
+  height:20vh;
+}
+
+.bottom-links {
+  padding-top: 2em;
 }
 
 .source {
@@ -175,16 +192,29 @@ h2 {
 }
 
 .Table-Header {
-  overflow-y: scroll;
+  overflow-y: hidden;
   height: 200px;
   width: 48%;
   display: inline-block;
   padding-bottom: 2em;
 }
 
-.ASSESSTable.FLR {
-  overflow-x: scroll;
+.Table-Header p {
+  font-family: "Helvetica", Times, serif;
+  /* font-family: "Courier", Courier, sans-serif; */
+  font-size: 0.85em;
+  text-align: center;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
 }
+
+.US p {
+  font-size: 0.75em;
+}
+
+/* .ASSESSTable.FLR {
+  overflow-x: scroll;
+} */
 /* this is the default class that comes with all to_html objects */
 table.dataframe {
   border-collapse: collapse;
