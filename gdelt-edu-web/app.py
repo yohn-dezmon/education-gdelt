@@ -46,7 +46,7 @@ def index_get():
 
     url = graph.buzzwords_graph("top10")
     url2 = graph.buzzwords_graph("11-21")
-    
+
     return render_template('index.html', url=url, url2=url2)
 
 @app.route('/querydb', methods=['GET'])
@@ -65,30 +65,29 @@ def query_db_page():
 
 @app.route('/curriculum', methods=['GET'])
 def curri_page():
-    pd.set_option('display.max_colwidth', -1)
 
-    df = pd.read_csv('/media/sf_sharedwithVM/MySQL/CA_curri_URL.csv',
-                        sep=',',
-                        header=0,
-                        error_bad_lines=False,
-                        warn_bad_lines=True,
-                        )
-    path_col = [urlparse(row).path for row in df['SOURCEURL']]
-    df['URL Path'] = path_col
+    graph = Graph()
 
-    # def make_clickable(val):
-    #     return '<a href="{}">{}</a>'.format(val,val)
-    #
-    # df.style.format({'SOURCEURL':  make_clickable})
-    # this needs IPython maybe? classes='table table-striped table-hover'
-    html_table = df.to_html(index=False)
-    titles = ['URL','URL Path']
-    # pd.set_option('display.max_colwidth', 50)
+    
+    CA_distplot = graph.curri_distplot("ca_avgtone_curri_topstates", "California")
+    TX_distplot = graph.curri_distplot("tx_avgtone_curri_topstates", "Texas")
+    MA_distplot = graph.curri_distplot("ma_avgtone_curri_topstates", "Massachusetts")
+    NY_distplot = graph.curri_distplot("ny_avgtone_curri_topstates", "New York")
 
+    CA_html_table = graph.table_generator("ca_curri_topstates", "curriculum")
+    TX_html_table = graph.table_generator("tx_curri_topstates", "curriculum")
+    MA_html_table = graph.table_generator("ma_curri_topstates", "curriculum")
+    NY_html_table = graph.table_generator("ny_curri_topstates", "curriculum")
 
-
-
-    return render_template('curriculum.html', table=html_table, titles=titles)
+    return render_template('curriculum.html', CA_distplot=CA_distplot,
+                            TX_distplot=TX_distplot,
+                            MA_distplot=MA_distplot,
+                            NY_distplot=NY_distplot,
+                            CA_html_table=CA_html_table,
+                            TX_html_table=TX_html_table,
+                            MA_html_table=MA_html_table,
+                            NY_html_table=NY_html_table
+                            )
 
 @app.route('/essa', methods=['GET'])
 def essa_page():
@@ -113,10 +112,10 @@ def assessment_page():
     assessment_avgtone = graph.assessment_avgtone()
 
     # pdb.set_trace()
-    maine_html_table = graph.assessment_tables("main_nummen_assessment")
-    student_html_table = graph.assessment_tables("student_nummen_assessment")
-    US_html_table = graph.assessment_tables("US_nummen_assessment")
-    FL_html_table = graph.assessment_tables("FL_nummen_assessment")
+    maine_html_table = graph.table_generator("main_nummen_assessment", "assessment")
+    student_html_table = graph.table_generator("student_nummen_assessment", "assessment")
+    US_html_table = graph.table_generator("US_nummen_assessment", "assessment")
+    FL_html_table = graph.table_generator("FL_nummen_assessment", "assessment")
 
     return render_template('assessment.html', maine_html_table=maine_html_table,
     student_html_table=student_html_table, US_html_table=US_html_table,
