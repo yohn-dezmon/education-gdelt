@@ -187,11 +187,12 @@ class Graph(object):
         plt.ylabel('Count', fontsize=12)
         plt.tight_layout()
         plt.subplots_adjust(top=0.9)
-        if state == "Texas":
+        if state == "Texas" or state == "Massachusetts":
             plt.title(state+'\' Average Tone Distribution', fontsize=14)
             url = 'static/'+name_of_file+'.png'
             plt.savefig('/media/sf_sharedwithVM/gdelt-education/gdelt-edu-web/static/'+name_of_file+'.png')
-            
+            return url
+
         plt.title(state+'\'s Average Tone Distribution', fontsize=14)
         url = 'static/'+name_of_file+'.png'
         plt.savefig('/media/sf_sharedwithVM/gdelt-education/gdelt-edu-web/static/'+name_of_file+'.png')
