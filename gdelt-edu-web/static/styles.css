@@ -64,9 +64,14 @@ h2 {
   float:left;
   display: inline-block;
   font-family: "Helvetica", Times, serif;
+
   width:49%;
   height:70vh;
   border:0px solid black;
+}
+
+.Intro p {
+  font-size: 1.0em;
 }
 
 .Contact-Intro {
@@ -130,7 +135,17 @@ h2 {
   display:inline-block;
   width: 49%;
   height: 70vh;
-  
+
+}
+
+.Collage h2 {
+  text-align: center;
+}
+
+.data-diagram {
+  width:100%;
+  height: auto;
+
 }
 
 .links {

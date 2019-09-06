@@ -68,7 +68,7 @@ def curri_page():
 
     graph = Graph()
 
-    
+
     CA_distplot = graph.curri_distplot("ca_avgtone_curri_topstates", "California")
     TX_distplot = graph.curri_distplot("tx_avgtone_curri_topstates", "Texas")
     MA_distplot = graph.curri_distplot("ma_avgtone_curri_topstates", "Massachusetts")
@@ -93,6 +93,11 @@ def curri_page():
 def essa_page():
 
     return render_template('essa.html')
+
+@app.route('/GDELT-details', methods=['GET'])
+def details_page():
+
+    return render_template('GDELT-details.html')
 
 @app.route('/mastery', methods=['GET'])
 def mastery_page():
