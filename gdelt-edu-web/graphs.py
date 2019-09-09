@@ -19,44 +19,36 @@ class Graph(object):
     def buzzwords_graph(self, name_of_file):
         sns.set(style='whitegrid')
 
-        df = pd.read_csv('/media/sf_sharedwithVM/MySQL/keyword_count.csv',
+        df = pd.read_csv('/media/sf_sharedwithVM/MySQL/'+name_of_file+'.csv',
                                 sep=',',
                                 names=['Keyword','Count']
                                 )
-        if name_of_file == "top10":
+        if name_of_file == "keyword_count":
             df_sorted = df.sort_values(by=['Count'], ascending=False).head(10)
+        else:
+            df_sorted = df.sort_values(by=['Count'], ascending=False)
 
 
-            # default = 6.4 (width?), 4.8 (height)
-            plt.figure()
-            ax = sns.barplot(x='Keyword',y='Count', data=df_sorted, palette='spring')
-            ax.set_xticklabels(ax.get_xticklabels(), rotation=20, ha="right", fontsize=10)
-            plt.xlabel('Keyword', fontsize=12)
-            # ok I think the ordering of tight_layout() -> subplots_adjust is important!
+        # default = 6.4 (width?), 4.8 (height)
+        plt.figure()
+        ax = sns.barplot(x='Keyword',y='Count', data=df_sorted, palette='spring')
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=20, ha="right", fontsize=10)
+        plt.xlabel('Keyword', fontsize=12)
+        # ok I think the ordering of tight_layout() -> subplots_adjust is important!
 
-            y = df_sorted['Count']
-            plt.yticks(np.arange(0, 60000, 5000))
-            plt.ylabel('Count', fontsize=12)
-            plt.tight_layout()
-            plt.subplots_adjust(top=0.9)
+        y = df_sorted['Count']
+        plt.yticks(np.arange(0, 60000, 5000))
+        plt.ylabel('Count', fontsize=12)
+        plt.tight_layout()
+        plt.subplots_adjust(top=0.9)
+        if name_of_file == "keyword_count":
             plt.title('Educational Buzzwords in US Media Top 10')
+        elif name_of_file == "gm_keyword_count":
+            plt.title('Educational Buzzwords in German Media Top 10')
 
-            url = 'static/buzzwords-top10.png'
-            plt.savefig('/media/sf_sharedwithVM/gdelt-education/gdelt-edu-web/static/buzzwords-top10.png')
-
-        if name_of_file == "11-21":
-            df_sorted2 = df.sort_values(by=['Count'], ascending=False).tail(11)
-            plt.figure()
-            ax = sns.barplot(x='Keyword',y='Count', data=df_sorted2, palette='spring')
-            ax.set_xticklabels(ax.get_xticklabels(), rotation=20, ha="right", fontsize=10)
-            plt.xlabel('Keyword', fontsize=12)
-            plt.ylabel('Count', fontsize=12)
-            plt.tight_layout()
-            plt.subplots_adjust(top=0.9)
-            plt.title('Educational Buzzwords in US Media (11-21)')
-            url2 = 'static/buzzwords-11-21.png'
-            plt.savefig('/media/sf_sharedwithVM/gdelt-education/gdelt-edu-web/static/buzzwords-11-21.png')
-            return url2
+        url = 'static/'+name_of_file+'.png'
+        plt.savefig('/media/sf_sharedwithVM/gdelt-education/gdelt-edu-web/static/'+name_of_file+'.png')
+        plt.clf()
 
         return url
 
@@ -197,4 +189,49 @@ class Graph(object):
         url = 'static/'+name_of_file+'.png'
         plt.savefig('/media/sf_sharedwithVM/gdelt-education/gdelt-edu-web/static/'+name_of_file+'.png')
 
+        return url
+
+    def charter_lineplot(self):
+        mydateparser = lambda x: pd.datetime.strptime(x, "%Y%m%d")
+
+        df = pd.read_csv('/media/sf_sharedwithVM/MySQL/charter_schools_avg_nummen_runavg.csv',
+                                sep=',',
+                                header=None,
+                                skiprows=[0],
+                                usecols=[0,1,2,3,4,5],
+                                names=['Date','AvgTone', 'NumMentions', 'SOURCEURL', 'Average Tone', 'Number of Mentions'],
+                                error_bad_lines=False,
+                                warn_bad_lines=True,
+                                parse_dates=['Date'],
+                                date_parser=mydateparser,
+                                )
+
+        # Here I am filtering the data set for the range of Date values I'm interested in.
+        str_start_date = '20140220'
+        str_end_date = '20190713'
+
+        strt_date = pd.datetime.strptime(str_start_date, "%Y%m%d")
+        end_date = pd.datetime.strptime(str_end_date, "%Y%m%d")
+        mask = (df['Date'] >= str_start_date) & (df['Date'] <= str_end_date)
+        df = df.loc[mask]
+
+        df_sorted = df.sort_values(by=['Date'], ascending=True)
+
+        # This plot consists of two lines on the same graph and two labels.
+        fig = plt.figure(figsize=(11,5))
+        ax = sns.lineplot(x="Date",y="Average Tone", data=df_sorted, estimator=None, label="Average Tone", color="hotpink")
+        ax2 = plt.twinx()
+        sns.lineplot(data=df_sorted, ax=ax2, x="Date",y="Number of Mentions", estimator=None, color="#14D74E", label="Number of Mentions")
+        ax.set_xlabel("Date",fontsize=13)
+        ax.set_ylabel("Average Tone",fontsize=13)
+        ax2.set_ylabel("Number of Mentions",fontsize=13)
+        ax.legend(loc='upper right')
+        ax2.legend(loc='upper right',
+                    bbox_to_anchor=(1.0,0.90)
+                    )
+
+        plt.title('Average Tone and Number of Mentions of Charter Schools in US media', fontsize=15)
+
+        url = 'static/charter_schools_avg_nummen_runavg.png'
+        plt.savefig('/media/sf_sharedwithVM/gdelt-education/gdelt-edu-web/static/charter_schools_avg_nummen_runavg.png')
         return url

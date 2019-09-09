@@ -116,6 +116,11 @@ h2 {
   /* width: 50%; */
 }
 
+.wide {
+  width: 100%;
+  
+}
+
 .subcategory-header {
   text-align: center;
 
@@ -140,6 +145,11 @@ h2 {
 
 .Collage h2 {
   text-align: center;
+}
+
+.Collage img {
+  width:100%;
+  height:auto;
 }
 
 .data-diagram {

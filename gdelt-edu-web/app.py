@@ -42,12 +42,9 @@ class Database:
 @app.route('/', methods=['GET'])
 def index_get():
 
-    graph = Graph()
 
-    url = graph.buzzwords_graph("top10")
-    url2 = graph.buzzwords_graph("11-21")
 
-    return render_template('index.html', url=url, url2=url2)
+    return render_template('index.html')
 
 @app.route('/querydb', methods=['GET'])
 def query_db_page():
@@ -89,6 +86,22 @@ def curri_page():
                             NY_html_table=NY_html_table
                             )
 
+@app.route('/charter-schools', methods=['GET'])
+def charter_schools_page():
+
+    graph = Graph()
+
+    # This line can be used to generate the avgtone/nummention line plot again if needed.
+    # I left it commented out because there are a lot of data points and it takes a long time
+    # to load.
+    lineplot_url = graph.charter_lineplot()
+    top10_us_url = graph.buzzwords_graph("keyword_count")
+
+    return render_template('charter-schools.html',
+                            top10_us_url=top10_us_url,
+                            # lineplot_url=lineplot_url,
+                            )
+
 @app.route('/essa', methods=['GET'])
 def essa_page():
 
@@ -108,6 +121,7 @@ def mastery_page():
 def contact_page():
 
     return render_template('contact.html')
+
 
 @app.route('/assessment', methods=['GET'])
 def assessment_page():
