@@ -130,15 +130,30 @@ class Graph(object):
                                 error_bad_lines=False,
                                 warn_bad_lines=True,
                                 )
-
+        elif topic == "charter-school":
+            df = pd.read_csv('/media/sf_sharedwithVM/MySQL/'+name_of_file+'.csv',
+                                sep=',',
+                                header=None,
+                                usecols=[1],
+                                names=['SOURCEURL'],
+                                error_bad_lines=False,
+                                warn_bad_lines=True,
+                                )
+        # The lambda function surrounds the url with the html <a> tag such that it can be clicked
+        # by the end user.
         df_subset = df[['SOURCEURL']].apply(lambda x: '<a href="'+x+'">'+x+'</a>')
 
         if name_of_file == "FL_nummen_assessment":
-            # Escape = False prevents characters like '<' from being escaped by pandas
+            # Escape = False prevents characters like '<' from being escaped by pandas.
             return df_subset.to_html(index=False, classes=["assessment","FL"], escape=False)
 
         if topic == "curriculum":
             return df_subset.to_html(index=False, classes="curriculum", escape=False)
+
+        if topic == "charter-school":
+            # I'm leaving the class as curriculum because I like the CSS formatting for that table.
+            return df_subset.to_html(index=False, classes="curriculum", escape=False)
+
 
         return df_subset.to_html(index=False, classes="assessment", escape=False)
 

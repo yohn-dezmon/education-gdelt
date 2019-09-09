@@ -8,7 +8,58 @@ Home - GDELT Education
 
 
     <img src={{ top10_us_url }} class="subcat-img">
+
+    <div class="topic-intro caption">
+    <p> This graph displays the occurence of selected keywords within US media article titles
+      from April 1, 2013 to present. Although the GDELT dataset extends to 2005, the SOURCEURL field
+      was not included until April 1, 2013, and this field was used to find the keywords within
+      the titles of the articles.
+      The key-phrase 'Charter Schools' appeared more than any other phrase/keyword with 57985 occurences.
+      I was intrigued and surprised that it was mentioned so much more than any other topic, so I decided
+      to look at the number of mentions and average tone to further delineate its representation
+      within the media.
+    </p>
+    </div>
+
+
     <img src="static/charter_schools_avg_nummen_runavg.png" class="subcat-img wide">
+
+    <div class="topic-intro caption">
+    <p> With average tone of the articles on the left Y axis and number of mentions on the right Y axis,
+      this graph displays several interesting patterns. Firstly, there are two inverse peaks and troughs
+      between the number of mentions and average tone of the articles. The first of these inverse
+      peaks occurs in early 2014, and the other in early 2015. Another interesting pattern is that
+      since 2015 both the number of mentions of charter schools and the average tone steadily decline
+      up until the present.
+    </p>
+    <p> All three of these patterns suggest a slightly negative portrayal of charter schools in
+      the US media considering that when the average tone peaked (i.e. positive articles involving charcter schools),
+       the number of mentions of the articles reached a trough and when the average tone dipped
+       the number of mentions reached its highest peak since 2014. However, I wanted to further
+       investigate what is being said about Charter Schools, so I decided to look at the most
+       mentioned articles from these three periods.
+    </p>
+    </div>
+    <h2 class="subcategory-header"> 2014 Inverse Peaks  </h2>
+    <div class="CATable">
+      {{ top_20_20142015|safe }}
+    </div>
+
+    <div class="topic-intro caption">
+    <p>
+    </p>
+    </div>
+
+    <h2 class="subcategory-header"> 2015 Inverse Peaks  </h2>
+    <div class="CATable">
+    {{ top_20_20152016|safe }}
+    </div>
+
+    
+    <h2 class="subcategory-header"> Recent Decline in Average Tone and Number of Mention </h2>
+    <div class="CATable">
+    {{ top_20_2017pres|safe }}
+    </div>
 
 
   </div>

@@ -94,12 +94,24 @@ def charter_schools_page():
     # This line can be used to generate the avgtone/nummention line plot again if needed.
     # I left it commented out because there are a lot of data points and it takes a long time
     # to load.
-    lineplot_url = graph.charter_lineplot()
+    # lineplot_url = graph.charter_lineplot()
     top10_us_url = graph.buzzwords_graph("keyword_count")
+
+    # I used the highest number of mentions from 2014-2015 to create this table
+    top_20_20142015 = graph.table_generator("charter_schools_20142015", "charter-school")
+
+    # I used the lowest number of mentions from 2014-2015 to create this table
+    top_20_20152016 = graph.table_generator("charter_schools_20152016", "charter-school")
+
+    # I used the lowest number of mentions from 2014-2015 to create this table
+    top_20_2017pres = graph.table_generator("charter_schools_2017pres", "charter-school")
 
     return render_template('charter-schools.html',
                             top10_us_url=top10_us_url,
                             # lineplot_url=lineplot_url,
+                            top_20_20142015=top_20_20142015,
+                            top_20_20152016=top_20_20152016,
+                            top_20_2017pres=top_20_2017pres
                             )
 
 @app.route('/essa', methods=['GET'])
