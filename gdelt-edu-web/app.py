@@ -20,35 +20,43 @@ import pdb
 app = Flask(__name__)
 
 class Database:
+    """ This class allows me to connect to the MySQL database. I have not included
+    a page where this is utilized on the website yet, however it is a feature I would
+    like to add in the future.
+    """
     def __init__(self):
         host = "127.0.0.1"
         user= "root"
         password = ""
         db = "gdelt"
 
+        # Here I am connecting to the database using pymysql.
         self.con = pymysql.connect(host=host, user=user, password=password, db=db,
                                 cursorclass=pymysql.cursors.DictCursor)
         self.cur = self.con.cursor()
 
     def list_actors(self):
+        """ This is a test query to ensure that pymysql was connecting to the database.
+        """
         self.cur.execute("SELECT Actor2Name from freqused LIMIT 50")
         result = self.cur.fetchall()
+        self.con.close()
 
         return result
 
-# instantiate Graph() class
 
 
 @app.route('/', methods=['GET'])
 def index_get():
-
-
+    """ This is the homepage of the website
+    """
 
     return render_template('index.html')
 
 @app.route('/querydb', methods=['GET'])
 def query_db_page():
-
+    """ Here I am connecting to the database with a combination of pymysql and
+    SQLAlchemy"""
     def db_query():
         db = Database()
         actors = db.list_actors()
@@ -62,7 +70,10 @@ def query_db_page():
 
 @app.route('/curriculum', methods=['GET'])
 def curri_page():
-
+    """ This is the curriculum category page. This method is used to generate the
+    graphs and tables that display on this page.
+    """
+    # The Graph class is instantiated and assigned to the graph variable.
     graph = Graph()
 
 
@@ -88,7 +99,9 @@ def curri_page():
 
 @app.route('/charter-schools', methods=['GET'])
 def charter_schools_page():
-
+    """ This is the charter school category page. This method is used to generate
+    the graphs and tables that display on the page.
+    """
     graph = Graph()
 
     # This line can be used to generate the avgtone/nummention line plot again if needed.
@@ -116,33 +129,46 @@ def charter_schools_page():
 
 @app.route('/essa', methods=['GET'])
 def essa_page():
+    """ This is the method that renders the Every Student Succeeds Act page."""
 
     return render_template('essa.html')
 
 @app.route('/GDELT-details', methods=['GET'])
 def details_page():
+    """ This method renders the page that explains the details of how I used the
+    GDELT Dataset and some of the key features within the Dataset.
+    """
 
     return render_template('GDELT-details.html')
 
-@app.route('/mastery', methods=['GET'])
-def mastery_page():
+@app.route('/common-core', methods=['GET'])
+def common_core_page():
+    """ This is the common category page.
+    """
 
-    return render_template('mastery.html')
+    return render_template('common-core.html')
 
 @app.route('/contact', methods=['GET'])
 def contact_page():
+    """ This method renders the contact page I've made in case someone wants to
+    contact me regarding the project
+    """
 
     return render_template('contact.html')
 
 
 @app.route('/assessment', methods=['GET'])
 def assessment_page():
+    """ This is the assessment category page. This method is used to generate
+    the graphs and talbes that display on the page.
+    """
+
     graph = Graph()
-    # dtype={'AvgAvgTone': 'float'}
+
     assessment_count = graph.assessment_count()
     assessment_avgtone = graph.assessment_avgtone()
 
-    # pdb.set_trace()
+
     maine_html_table = graph.table_generator("main_nummen_assessment", "assessment")
     student_html_table = graph.table_generator("student_nummen_assessment", "assessment")
     US_html_table = graph.table_generator("US_nummen_assessment", "assessment")

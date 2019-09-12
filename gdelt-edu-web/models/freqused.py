@@ -1,9 +1,7 @@
-""" leaving this here for reference, not going to use this code for now """
-
 from db import db
 import datetime
 import re
-
+""" leaving this here for reference, not going to use this code for now """
 
 class FreqUsed(db.Model):
     # idk if I can set this as PK since it isn't in the DB

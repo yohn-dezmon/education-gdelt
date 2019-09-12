@@ -11,34 +11,47 @@ import pdb
 
 class Graph(object):
     """ A class to house all of the code responsible for creating
-    the graphs on the website, thus making app.py more readable. """
+    the graphs and tables on the website, thus making app.py more readable.
+    """
 
     def __init__(self):
         pass
 
     def buzzwords_graph(self, name_of_file):
+        """ This method generates the 'Top 10' buzzwords bar graph that is displayed
+        on the Charter School page
+        """
+        # Setting the Seaborn style.
         sns.set(style='whitegrid')
 
+        # Ingesting the data into a Pandas dataframe.
         df = pd.read_csv('/media/sf_sharedwithVM/MySQL/'+name_of_file+'.csv',
                                 sep=',',
                                 names=['Keyword','Count']
                                 )
+        df2 = pd.DataFrame({'Keyword':['Sex Ed'],
+                    'Count': [5234]})
+        df = df.append(df2, ignore_index = True)
+        # Here the data is sorted by Count in descending order.
         if name_of_file == "keyword_count":
             df_sorted = df.sort_values(by=['Count'], ascending=False).head(10)
         else:
             df_sorted = df.sort_values(by=['Count'], ascending=False)
 
-
-        # default = 6.4 (width?), 4.8 (height)
+        # Create a figure object.
+        # The default width is 6.4 and the default height is 4.8.
         plt.figure()
+        # Seaborn is used to create a barplot.
         ax = sns.barplot(x='Keyword',y='Count', data=df_sorted, palette='spring')
         ax.set_xticklabels(ax.get_xticklabels(), rotation=20, ha="right", fontsize=10)
         plt.xlabel('Keyword', fontsize=12)
         # ok I think the ordering of tight_layout() -> subplots_adjust is important!
 
         y = df_sorted['Count']
+        # Creating appropriate y ticks.
         plt.yticks(np.arange(0, 60000, 5000))
         plt.ylabel('Count', fontsize=12)
+        # This ensures that the x-axis label is not cut off despite slightly vertical x tick labels.
         plt.tight_layout()
         plt.subplots_adjust(top=0.9)
         if name_of_file == "keyword_count":
@@ -47,7 +60,9 @@ class Graph(object):
             plt.title('Educational Buzzwords in German Media Top 10')
 
         url = 'static/'+name_of_file+'.png'
+        # The matplotlib figure is saved to the static folder of the project.
         plt.savefig('/media/sf_sharedwithVM/gdelt-education/gdelt-edu-web/static/'+name_of_file+'.png')
+        # This should clear the plt.figure() object.
         plt.clf()
 
         return url
@@ -61,7 +76,7 @@ class Graph(object):
         df_sorted = df.sort_values(by=['Count'], ascending=False).head(15)
 
 
-        # default = 6.4 (width?), 4.8 (height)
+        # default = 6.4 (width), 4.8 (height)
         plt.figure()
         ax = sns.barplot(x='Actor',y='Count', data=df_sorted, palette='spring')
 

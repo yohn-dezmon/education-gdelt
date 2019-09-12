@@ -1,7 +1,44 @@
 {% extends "layout.html" %}
 {% block title %}
-Home - GDELT Education
+GDELT - GDELT Education
 {% endblock %}
   {% block content %}
+  <div class="centered">
+    <h2 class="subcategory-header"> Global Database of Events Language and Tone (GDELT) </h2>
 
+    <div class="topic-intro caption">
+    <p> All of the data used in this project originated from the GDELT dataset.
+      I used the events table, in which each row of the table represents a given event
+      and is characterized by actors and actor codes, an event code, geographic coordinates,
+      a URL linking to the article describing the event, the average tone of the article,
+      the country where the event took place, as well as the date the article was published and the date when the article was uploaded
+      to the database. For more information on how the articles are filtered, analyzed,
+      and uploaded to the database, please see this <a href="http://data.gdeltproject.org/documentation/ISA.2013.GDELT.pdf">2013 paper introducing GDELT</a> [1].
+    </p>
+
+    <p>The events table holds 184.3 GB of data and consists of 460,419,602 rows. Using Google Big Query
+      I filtered this table for all actor codes that included the code EDU and saved the
+      results in a new table that consisted of 6.82 GB of data and 23,109,910 rows.
+    </p>
+
+    <p> The main fields of interest that I used to make the majority of my visualizations include:
+    </p>
+    <div class="fields-list">
+    <ul>
+      <li><b>SOURCEURL:</b> This field is only present in the daily event stream files beginning April 1, 2013 and lists the URL of the news article the event was found in. If an event was mentioned in multiple articles, only one of the URLs is provided. This field is not present in event files prior to April 1, 2013 [2].<br><br></li>
+      <li><b>AvgTone:</b> This is the average “tone” of all documents containing one or more mentions of this event. The score ranges from -100 (extremely negative) to +100 (extremely positive) [2].<br><br> </li>
+      <li> <b>NumMentions:</b> This is the total number of mentions of this event across all source documents. Multiple references to an event within a single document also contribute to this count. This can be used as a method of assessing the “importance” of an event: the more discussion of that event, the more likely it is to be significant [2].<br><br></li>
+      <li> <b>Actor1Geo_ADM1Code</b> This field allowed me to extract individual states from within United States [2]. <br><br></li>
+    </div>
+    <h2 class="subcategory-header"> Sources </h2>
+    <div class="fields-list">
+    <ol>
+      <li><a href="http://data.gdeltproject.org/documentation/ISA.2013.GDELT.pdf">ISA 2013 Paper Introducing GDELT</a> </li>
+      <li><a href="http://data.gdeltproject.org/documentation/GDELT-Data_Format_Codebook.pdf">GDELT 1.0 Data Format Documentation</li>
+    </ol>
+    </div>
+
+
+</div>
+  </div>
   {% endblock %}

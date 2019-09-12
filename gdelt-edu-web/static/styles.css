@@ -21,7 +21,7 @@ h1 {
 .header-buttons {
   float:right;
   display: inline;
-  width:30%;
+  width:40%;
 }
 
 ul {
@@ -118,7 +118,7 @@ h2 {
 
 .wide {
   width: 100%;
-  
+
 }
 
 .subcategory-header {
@@ -375,6 +375,21 @@ table.curriculum td {
   width:600px;
   height:450px;
   margin: auto;
+}
+
+.fields-list {
+  width:70%;
+  margin: auto;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.fields-list p {
+  font-size: 0.9em;
+}
+
+.fields-list ol li {
+  float: left;
 }
 
 /* table.FL {
