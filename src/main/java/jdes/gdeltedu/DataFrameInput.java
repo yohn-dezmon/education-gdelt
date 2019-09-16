@@ -127,6 +127,8 @@ public class DataFrameInput {
 		arrayOfDfs.add(df);
 
 }
+	
+	
 	public static void dataTypePrint(Dataset<Row> dataset) {
 		Tuple2<String, String>[] tuples = dataset.dtypes();
 		
