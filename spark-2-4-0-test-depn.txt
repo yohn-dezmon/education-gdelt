@@ -27,3 +27,156 @@ from article
     <version>${spark.version}</version>
     <scope>test</scope>
 </dependency>
+
+--
+Ok I'm going to try to do the unit tests with 2.4.0 again (10/04/2019):
+Notes:
+(1) ok using the below dependencies, I am now not even able to access things 
+from spark-sql. The reason being is that I'm using 2.12 when I only have 
+scala 2.11 installed on this machine... I don't want to install scala 
+so I'm just going to update all dependencies to be compatible with 
+scala 2.11.
+
+SPARK TESTING BASE:
+<!-- https://mvnrepository.com/artifact/com.holdenkarau/spark-testing-base -->
+<dependency>
+    <groupId>com.holdenkarau</groupId>
+    <artifactId>spark-testing-base_2.12</artifactId>
+    <version>${spark.version}_0.12.0</version>
+    <scope>test</scope>
+</dependency>
+
+SPARK-HIVE
+<!-- https://mvnrepository.com/artifact/org.apache.spark/spark-hive -->
+<dependency>
+    <groupId>org.apache.spark</groupId>
+    <artifactId>spark-hive_2.12</artifactId>
+    <version>${spark.version}</version>
+    <scope>provided</scope>
+</dependency>
+
+SPARK
+<dependency>
+    <groupId>org.apache.spark</groupId>
+    <artifactId>spark-hive_2.12</artifactId>
+    <version>2.4.0</version>
+    <scope>provided</scope>
+</dependency>
+
+
+<<<<THIS IS WHAT WAS WORKING FOR SPARK 1.6.0 (at least the imports)>>>>>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>jdes.gdeltedu</groupId>
+  <artifactId>gdeltedu</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <name>gdeltedu</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+
+   <properties>
+  	<!-- Keep Spark versions as properties to allow easy modification -->
+    <spark.version>1.6.0</spark.version>
+    <!-- Maven properties for compilation -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+  <dependencies>
+  	<!-- Add the Spark dependency -->
+	<dependency>
+		<groupId>org.apache.spark</groupId>
+		<artifactId>spark-core_2.10</artifactId>
+		<version>${spark.version}</version>
+	</dependency>
+  <dependency>
+    <groupId>org.apache.spark</groupId>
+    <artifactId>spark-sql_2.10</artifactId>
+    <version>${spark.version}</version>
+  </dependency>
+  <!-- from the Unit Test article -->
+  <dependency>
+    <groupId>com.holdenkarau</groupId>
+    <artifactId>spark-testing-base_2.10</artifactId>
+    <version>${spark.version}_0.6.0</version>
+    <scope>test</scope>
+</dependency>
+ <!-- from the Unit Test article -->
+<dependency>
+    <groupId>org.apache.spark</groupId>
+    <artifactId>spark-hive_2.10</artifactId>
+    <version>${spark.version}</version>
+    <scope>test</scope>
+</dependency>
+
+<!-- I added this b/c Exception in thread "main" java.lang.NoClassDefFoundError: org/apache/hadoop/util/StopWatch -->
+<dependency>
+    <groupId>org.apache.hadoop</groupId>
+    <artifactId>hadoop-common</artifactId>
+    <version>2.7.2</version>
+</dependency>
+  
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+      	<!-- Set the Java target version to 1.7 -->
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.0</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.9</version>
+        <configuration>
+            <downloadJavadocs>true</downloadJavadocs>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
+<<<<< END OF POM >>>>>>>>
+
+<<<<<ERROR MSG from mvn eclipse:eclipse WITH 2.4.0 and Scala 2.11 >>>>>>
+ailed to retrieve com.holdenkarau:spark-testing-base_2.11-2.4.0_0.11.0
+Caused by: Cannot access confluent-repository (https://packages.confluent.io/maven/) in offline mode and the artifact com.holdenkarau:spark-testing-base_2.11:jar:2.4.0_0.11.0 has not been downloaded from it before.
+
+Try downloading the file manually from the project website.
+
+Then, install it using the command: 
+    mvn install:install-file -DgroupId=com.holdenkarau -DartifactId=spark-testing-base_2.11 -Dversion=2.4.0_0.11.0 -Dpackaging=jar -Dfile=/path/to/file
+
+Alternatively, if you host your own repository you can deploy the file there: 
+    mvn deploy:deploy-file -DgroupId=com.holdenkarau -DartifactId=spark-testing-base_2.11 -Dversion=2.4.0_0.11.0 -Dpackaging=jar -Dfile=/path/to/file -Durl=[url] -DrepositoryId=[id]
+
+Path to dependency: 
+	1) jdes.gdeltedu:gdeltedu:jar:1.0-SNAPSHOT
+	2) com.holdenkarau:spark-testing-base_2.11:jar:2.4.0_0.11.0
+
+
+  com.holdenkarau:spark-testing-base_2.11:jar:2.4.0_0.11.0
+
+from the specified remote repositories:
+  confluent-repository (https://packages.confluent.io/maven/, releases=true, snapshots=true),
+  cloudera-repository (https://repository.cloudera.com/artifactory/cloudera-repos/, releases=true, snapshots=true),
+  central (http://repo.maven.apache.org/maven2, releases=true, snapshots=true)
+
+[INFO] Unable to read jar manifest from /home/vmuser/.m2/repository/com/holdenkarau/spark-testing-base_2.11/2.4.0_0.11.0/spark-testing-base_2.11-2.4.0_0.11.0.jar
+[WARNING] An error occurred during dependency resolution.
+    Failed to retrieve org.apache.spark:spark-hive_2.11-2.4.0
+Caused by: Cannot access confluent-repository (https://packages.confluent.io/maven/) in offline mode and the artifact org.apache.spark:spark-hive_2.11:jar:2.4.0 has not been downloaded from it before.
+
+Try downloading the file manually from the project website.
+
+Then, install it using the command: 
+    mvn install:install-file -DgroupId=org.apache.spark -DartifactId=spark-hive_2.11 -Dversion=2.4.0 -Dpackaging=jar -Dfile=/path/to/file
+

@@ -6,12 +6,41 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.File;
 
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 import org.junit.Test;
+import org.junit.Before;
 import jdes.gdeltedu.ReFactoredDFI;
 import jdes.gdeltedu.CSVFile;
 
+import scala.Option;
+import scala.Serializable;
+import scala.Tuple2;
+import scala.reflect.ClassTag;
+import jdes.gdeltedu.DFIForSpark2;
+import jdes.gdeltedu.TestDataSet;
 
-public class SparkTest2 {
+import org.apache.spark.sql.Encoder;
+import org.apache.spark.sql.Encoders;
+
+import com.holdenkarau.spark.testing.JavaRDDComparisons;
+import com.holdenkarau.spark.testing.SharedJavaSparkContext;
+
+
+
+public class SparkTest2 extends SharedJavaSparkContext 
+ implements Serializable {
+	// I need to instantiate Spark here so that it doesn't get re-run for each 
+	// unit test
+	private static final long serialVersionUID = -5681683598336701496L;
+	
+//	@Before
+//	public void runBefore() {
+//		SparkSession spark = SparkSession.builder().master("local").appName("gdelt-education").
+//				config("some config", "value").getOrCreate();
+//		
+//	}
 
 	@Test
 	public void testCSVFile() {
@@ -23,7 +52,7 @@ public class SparkTest2 {
 		csvFile.setInputFile("filter_edu-000000000000.csv");
 		csvFile.setIsCSV(true);
 		
-		CSVFile result = ReFactoredDFI.findCSVFiles(file);
+		CSVFile result = DFIForSpark2.findCSVFiles(file);
 		
 		
 		assertEquals(csvFile.getFilePath(), result.getFilePath());
@@ -43,7 +72,7 @@ public class SparkTest2 {
 		// This is incorrect on purpose.
 		csvFile.setIsCSV(true);
 		
-		CSVFile result = ReFactoredDFI.findCSVFiles(file);
+		CSVFile result = DFIForSpark2.findCSVFiles(file);
 		
 		
 		assertEquals(csvFile.getFilePath(), result.getFilePath());
@@ -55,15 +84,39 @@ public class SparkTest2 {
 	
 	@Test
 	public void testCreateDF() {
-		File file = new File("/media/sf_sharedwithVM/TestDataset/filter_edu-000000000000.csv");
+//		File file = new File("/media/sf_sharedwithVM/TestDataset/filter_edu-000000000000.csv");
+//		
+//		CSVFile csvFile = new CSVFile();
+//		
+//		csvFile.setFilePath("/media/sf_sharedwithVM/TestDataset/filter_edu-000000000000.csv");
+//		csvFile.setInputFile("filter_edu-000000000000.csv");
+//		csvFile.setIsCSV(true);
 		
-		CSVFile csvFile = new CSVFile();
+		// Create an instance of a Bean class
+		TestDataSet person = new TestDataSet();
+		person.setName("Andy");
+		person.setAge(32);
 		
-		csvFile.setFilePath("/media/sf_sharedwithVM/TestDataset/filter_edu-000000000000.csv");
-		csvFile.setInputFile("filter_edu-000000000000.csv");
-		csvFile.setIsCSV(true);
+		Encoder<TestDataSet> personEncoder = Encoders.bean(TestDataSet.class);
+		Dataset<TestDataSet> javaBeanDS = spark.createDataset(
+		  Collections.singletonList(person),
+		  personEncoder
+		);
 		
-		CSVFile result = ReFactoredDFI.findCSVFiles(file);
+		List<Dataset<Row>> arrayOfDfs = new ArrayList<Dataset<Row>>();
+		
+		
+		
+		
+		// SparkSession
+		// String
+		// String
+		// List<Dataset<Row>> 
+		CSVFile result = DFIForSpark2.createDataFrame(
+				spark,
+				String filePath,
+				String inputFile,
+				List<Dataset<Row>> arrayOfDfs);
 		
 		
 		assertEquals(csvFile.getFilePath(), result.getFilePath());

@@ -6,7 +6,6 @@ from flask import Flask, abort, redirect, request, render_template
 # python regex
 # import re
 import pymysql
-import mpld3
 import seaborn as sns
 from urllib.parse import urlparse
 import pandas as pd

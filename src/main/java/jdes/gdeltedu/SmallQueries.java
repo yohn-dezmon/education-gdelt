@@ -5,6 +5,11 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 
+/*
+* The SmallQueries class was used after data had been exported from MySQL to a
+* CSV file to further transform and run queries on that data. This class was rarely used.
+*/
+
 public class SmallQueries {
 
 	public static void main(String[] args) {
@@ -20,20 +25,20 @@ public class SmallQueries {
 
 		SparkSession spark = SparkSession.builder().master("local").appName("actor-assessment").
 				config("some config", "value").getOrCreate();
-		// do I need to change load to csv?
+		
 //		Dataset<Row> inputdf = spark.read().format("csv").option("header","true").load(inputDir);
 
 		Dataset<Row> inputdf = spark.read().load(inputDir);
 		inputdf.createOrReplaceTempView("gdeltedu");
-		
-		
+
+
 		Dataset<Row> CA_curri_URL = inputdf.sqlContext().sql("SELECT DISTINCT(SOURCEURL) from gdeltedu "
-				+ "WHERE ActionGeo_ADM1Code like 'USCA' AND SOURCEURL LIKE '%curriculum%' and ActionGeo_CountryCode = 'US'");	
-		
-		
-		
-		
-		
+				+ "WHERE ActionGeo_ADM1Code like 'USCA' AND SOURCEURL LIKE '%curriculum%' and ActionGeo_CountryCode = 'US'");
+
+
+
+
+
 		CA_curri_URL.coalesce(1).write().option("header", "true").mode(SaveMode.Overwrite).csv(output);
 
 

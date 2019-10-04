@@ -12,6 +12,11 @@ import com.google.cloud.bigquery.QueryResponse;
 import com.google.cloud.bigquery.TableResult;
 import java.util.UUID;
 
+/*
+* This is the code I was using to attempt to access the google cloud storage API.
+* Ultimately I was unable to access the data via the API and just downloaded
+* the data as .gz files instead onto my virtual machine.
+*/
 
 public class AccessingBigQuery {
 	public static void main(String... args) throws Exception {
@@ -63,4 +68,3 @@ public class AccessingBigQuery {
 	    }
 	  }
 	}
-

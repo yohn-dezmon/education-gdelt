@@ -1,0 +1,3 @@
+FullDataOutput config
+
+/media/sf_sharedwithVM/Emergency/gdeltParquet /home/vmuser/Desktop/gdeltMySQL

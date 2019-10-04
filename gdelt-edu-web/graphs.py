@@ -1,5 +1,4 @@
 import pymysql
-import mpld3
 import seaborn as sns
 from urllib.parse import urlparse
 import pandas as pd
@@ -16,7 +15,7 @@ class Graph(object):
 
     def __init__(self):
         pass
-
+    
     def buzzwords_graph(self, name_of_file):
         """ This method generates the 'Top 10' buzzwords bar graph that is displayed
         on the Charter School page

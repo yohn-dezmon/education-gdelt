@@ -1,0 +1,12 @@
+return RowFactory.create(removeQuotes(parts[0]),
+					removeQuotes(parts[1]),removeQuotes(parts[2]), removeQuotes(parts[3]),
+					removeQuotes(parts[4]), removeQuotes(parts[5]), removeQuotes(parts[6]),
+					removeQuotes(parts[7]), removeQuotes(parts[8]), removeQuotes(parts[9]),
+					removeQuotes(parts[10]), removeQuotes(parts[11]), removeQuotes(parts[12]),
+					removeQuotes(parts[13]), removeQuotes(parts[14]), removeQuotes(parts[15]),
+					removeQuotes(parts[16]), removeQuotes(parts[17]), removeQuotes(parts[18]),
+					removeQuotes(parts[19]), removeQuotes(parts[20]), removeQuotes(parts[21]),
+					removeQuotes(parts[22]), removeQuotes(parts[23]), removeQuotes(parts[24]),
+					removeQuotes(parts[25]), removeQuotes(parts[26]), removeQuotes(parts[27]),
+					removeQuotes(parts[28]), removeQuotes(parts[29]), removeQuotes(parts[30]),
+					removeQuotes(parts[31]))

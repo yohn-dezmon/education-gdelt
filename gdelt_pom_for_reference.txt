@@ -14,37 +14,46 @@
 
    <properties>
   	<!-- Keep Spark versions as properties to allow easy modification -->
-    <spark.version>2.4.0</spark.version>
+  	<!-- I'm changing the version to 1.6.0 b/c I'm following Spark Base Test instr. -->
+    <spark.version>1.6.0</spark.version>
+    
     <!-- Maven properties for compilation -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
   <dependencies>
+ 
   	<!-- Add the Spark dependency -->
-	<dependency>
-		<groupId>org.apache.spark</groupId>
-		<artifactId>spark-core_2.11</artifactId>
-		<version>${spark.version}</version>
-	</dependency>
-  <dependency>
-    <groupId>org.apache.spark</groupId>
-    <artifactId>spark-sql_2.11</artifactId>
-    <version>${spark.version}</version>
-  </dependency>
-  <!-- from the Unit Test article -->
-  <dependency>
-    <groupId>com.holdenkarau</groupId>
-    <artifactId>spark-testing-base_2.11</artifactId>
-    <version>${spark.version}_0.11.0</version>
-    <scope>test</scope>
-</dependency>
- <!-- from the Unit Test article -->
+  	<!-- https://mvnrepository.com/artifact/org.apache.spark/spark-core -->
 <dependency>
     <groupId>org.apache.spark</groupId>
-    <artifactId>spark-hive_2.11</artifactId>
+    <artifactId>spark-core_2.10</artifactId>
     <version>${spark.version}</version>
+</dependency>
+	<!-- output to avro , I need to change this so the spark-avro version is the same as the spark 2.10 version-->
+<dependency>
+    <groupId>com.databricks</groupId>
+    <artifactId>spark-avro_2.11</artifactId>
+    <version>4.0.0</version>
+</dependency>
+ <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql -->
+<dependency>
+    <groupId>org.apache.spark</groupId>
+    <!-- I changed this from 2.11 to 2.10... -->
+    <artifactId>spark-sql_2.10</artifactId>
+    <version>${spark.version}</version>
+</dependency>
+
+<!-- I added this b/c ERROR SparkContext: Error initializing SparkContext... javax.servlet.FilterRegistration -->
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>3.0.1</version>
     <scope>provided</scope>
 </dependency>
+
+
+
 
 <dependency>
 	<groupId>mysql</groupId>
@@ -52,18 +61,34 @@
 	<version>5.1.6</version>
 </dependency>
 
+
 <dependency>
-	<groupId>junit</groupId>
-	<artifactId>junit</artifactId>
-	<version>4.11</version>
-	<scope>test</scope>
+    <groupId>com.holdenkarau</groupId>
+    <artifactId>spark-testing-base_2.10</artifactId>
+    <version>${spark.version}_0.6.0</version>
+    <scope>test</scope>
 </dependency>
+
+<!-- I added this b/c Exception in thread "main" java.lang.NoClassDefFoundError: org/apache/hadoop/util/StopWatch -->
+<!-- 
+<dependency>
+    <groupId>org.apache.hadoop</groupId>
+    <artifactId>hadoop-common</artifactId>
+    <version>2.7.2</version>
+</dependency>
+-->
   
+  <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
       <plugin>
-      	<!-- Set the Java target version to 1.7 -->
+      	<!-- Set the Java target version to 1.8 -->
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.0</version>
         <configuration>

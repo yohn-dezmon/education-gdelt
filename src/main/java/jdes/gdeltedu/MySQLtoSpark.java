@@ -6,6 +6,11 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
+/*
+* The MySQLtoSpark class was set up to transfer data from MySQL to Spark in order
+* to run queries while hive and mysql were already being used. This was used rarely.
+*/
+
 public class MySQLtoSpark {
 
 	public static void main(String[] args) {
@@ -16,10 +21,10 @@ public class MySQLtoSpark {
 			System.out.println("Error with commandline inputs!");
 			return;
 		}
-		
+
 		SparkSession spark = SparkSession.builder().master("local").appName("reading-from-MySQL").
 				config("some config", "value").getOrCreate();
-		
+
 
 		/* (SELECT Actor1Name, COUNT(Actor1Name) as Count "
 		+ "from freqused WHERE Actor1Name IS NOT NULL GROUP BY "
@@ -31,9 +36,9 @@ public class MySQLtoSpark {
 				option("dbtable", "freqused").
 				option("user", "root").option("password", "").load();
 		inputdf.createOrReplaceTempView("freqused");
-		
+
 //		Dataset<Row> gdeltFreqUsed = inputdf.sqlContext().sql("SELECT * FROM freqused LIMIT 10");
-		
+
 		inputdf.show(10);
 
 	}
