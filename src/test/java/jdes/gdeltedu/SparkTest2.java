@@ -21,8 +21,14 @@ import scala.reflect.ClassTag;
 import jdes.gdeltedu.DFIForSpark2;
 import jdes.gdeltedu.TestDataSet;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.spark.sql.Encoder;
 import org.apache.spark.sql.Encoders;
+
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
 
 import com.holdenkarau.spark.testing.JavaRDDComparisons;
 import com.holdenkarau.spark.testing.SharedJavaSparkContext;
@@ -97,11 +103,14 @@ public class SparkTest2 extends SharedJavaSparkContext
 		person.setName("Andy");
 		person.setAge(32);
 		
-		Encoder<TestDataSet> personEncoder = Encoders.bean(TestDataSet.class);
-		Dataset<TestDataSet> javaBeanDS = spark.createDataset(
-		  Collections.singletonList(person),
-		  personEncoder
-		);
+		List<String> input = Arrays.asList("1\tHeart", "2\tDiamonds");
+	    JavaRDD<String> inputRDD = jsc().parallelize(input);
+	    
+//		Encoder<TestDataSet> personEncoder = Encoders.bean(TestDataSet.class);
+//		Dataset<TestDataSet> javaBeanDS = jsc().createDataset(
+//		  Collections.singletonList(person),
+//		  personEncoder
+//		);
 		
 		List<Dataset<Row>> arrayOfDfs = new ArrayList<Dataset<Row>>();
 		

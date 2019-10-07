@@ -39,7 +39,7 @@ public class DFIForSpark2 {
 		return csvFile;
 	}
 
-	public static void createDataFrame(SparkSession spark, String filePath, String inputFile,
+	public static void createDataFrame(SparkSession spark, String filePath,
 			List<Dataset<Row>> arrayOfDfs) {
 
 		Dataset<Row> df = spark.read().format("csv").option("inferSchema", "true").option("header", "true").load(filePath);
@@ -118,7 +118,7 @@ public class DFIForSpark2 {
 					// CSVFile is a class I created such that findCSVFiles can return multiple values of different types.
 					CSVFile potentialCSVFile = findCSVFiles(file);
 					if (potentialCSVFile.getIsCSV() == true) {
-						createDataFrame(spark, potentialCSVFile.getFilePath(), potentialCSVFile.getInputFile(),
+						createDataFrame(spark, potentialCSVFile.getFilePath(),
 								arrayOfDfs);
 					}
 					}
