@@ -50,6 +50,8 @@ public class DFIForSpark2 {
 	}
 
 	public static Dataset<Row> filterData(Dataset<Row> dataframe) {
+		
+		dataTypePrint(dataframe);
 
 
 		Dataset<Row> dfToAppend = dataframe.sqlContext().sql("SELECT GLOBALEVENTID, SQLDATE AS Date, Year, FractionDate, Actor1Code, " +
@@ -76,9 +78,11 @@ public class DFIForSpark2 {
 
 	public static void dataTypePrint(Dataset<Row> dataset) {
 		Tuple2<String, String>[] tuples = dataset.dtypes();
+		int col_indx = 1;
 
 		for (Tuple2<String, String> tuple: tuples) {
-		System.out.println(tuple);
+		System.out.println(tuple + " " + col_indx);
+		col_indx += 1;
 		}
         return;
     }
