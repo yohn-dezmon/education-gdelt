@@ -15,7 +15,7 @@ to characterize their portrayal within the United States' media.
 ## Data Ingestion
 Using Google Cloud Platform, I set up a project within Google Big Query and began  
 exploring the GDELT dataset. I used the query below to filter the gdeltv2-events table  
-for educational events:  
+for educational events on 7/14/2019:  
 
 ```
 SELECT GLOBALEVENTID,
