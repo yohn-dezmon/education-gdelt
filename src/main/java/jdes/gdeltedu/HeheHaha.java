@@ -1,10 +1,9 @@
 package jdes.gdeltedu;
 
-public class ReFactoredFDO {
-
+public class HeheHaha {
+	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		System.out.println("HEY hehehahahah");
+		
 	}
-
 }
